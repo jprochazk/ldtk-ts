@@ -1,6 +1,6 @@
 {
     "name": "ldtk",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "description": "Parser for the LDtk project file format",
     "author": "Jan Procházka",
     "license": "MIT",
