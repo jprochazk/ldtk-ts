@@ -1,0 +1,26 @@
+on: [push, pull_request]
+
+name: CI
+
+jobs:
+  # runs typescript build + test
+  ts:
+    name: TypeScript 
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_version:
+          - 14
+          - 15
+    steps:
+      # get code + setup node toolchain
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Get Node toolchain
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node_version }}
+      # install, build, test
+      - run: npm install
+      - run: npm run build
+      - run: npm run test

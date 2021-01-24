@@ -1,0 +1,13 @@
+.github
+node_modules
+src
+.eslintignore
+.eslintrc.js
+.gitignore
+.npmignore
+jest.config.js
+package-lock.json
+package.json
+README.md
+rollup.config.js
+tsconfig.json
