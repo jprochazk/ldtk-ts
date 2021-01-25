@@ -29,7 +29,7 @@
         "test": "jest",
         "build": "rollup -c",
         "prepare": "npm run build",
-        "build-docs": "typedoc src/index.ts"
+        "build-docs": "typedoc src/index.ts --readme none"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^15.1.0",
