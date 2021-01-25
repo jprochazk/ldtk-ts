@@ -18,11 +18,11 @@ describe("importer", () => {
     });
     it("gridvania", () => {
         const data = fetch<LDtk.World>("test_gridvania.ldtk");
-        const world = World.fromJSON(data);
+        World.fromJSON(data);
     });
     it("free layout", () => {
         const data = fetch<LDtk.World>("test_free.ldtk");
-        const world = World.fromJSON(data);
+        World.fromJSON(data);
     });
     it("separate files", async () => {
         const data = fetch<LDtk.World>("test_separate.ldtk");
