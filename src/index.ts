@@ -1,422 +1,296 @@
-export abstract class Project {
-    /**
-     * Parse an existing JSON object as an LDtk project file
-     */
-    static fromJSON(data: unknown): LDtkProject {
-        // TODO: validation?
-        return data as LDtkProject;
-    }
+import { loadJSON } from "./util";
+import * as LDtk from "./typedef";
 
-    /**
-     * Asynchronously load and parse an LDtk project file
-     */
-    static async fromURL(path: string): Promise<LDtkProject> {
-        const data = await fetch(path);
-        return Project.fromJSON(await data.json());
-    }
+// Re-export LDtk type definitions
+export {
+    LDtk
+}
+
+export interface Point {
+    x: number,
+    y: number
+}
+
+export interface Size {
+    width: number,
+    height: number
+}
+
+// TODO: instead of return new objects for things like Point and Size, instantiate them in the constructor
+// TODO: auto-generate documentation https://den.dev/blog/docs-github-actions/#typescript-documentation-generator
+
+export const enum FieldType {
+    Int = "Int",
+    IntArray = "IntArray",
+    Float = "Float",
+    FloatArray = "FloatArray",
+    String = "String",
+    StringArray = "StringArray",
+    Bool = "Bool",
+    BoolArray = "BoolArray",
+    Color = "Color",
+    ColorArray = "ColorArray",
+    Point = "Point",
+    PointArray = "PointArray",
+    FilePath = "FilePath",
+    FilePathArray = "FilePathArray",
+    Enum = "Enum",
+    EnumArray = "EnumArray",
+}
+export interface IntField {
+    id: string,
+    type: FieldType.Int
+    value: number | null
+}
+export interface FloatField {
+    id: string,
+    type: FieldType.Float
+    value: number | null
+}
+export interface StringField {
+    id: string,
+    type: FieldType.String
+    value: string | null
+}
+export interface BoolField {
+    id: string,
+    type: FieldType.Bool
+    value: boolean | null
+}
+export interface ColorField {
+    id: string,
+    type: FieldType.Color
+    value: string | null
+}
+export interface PointField {
+    id: string,
+    type: FieldType.Point
+    value: Point | null
+}
+export interface FilePathField {
+    id: string,
+    type: FieldType.FilePath
+    value: string | null
+}
+export interface EnumField {
+    id: string,
+    type: FieldType.Enum
+    value: string | null
+    ref: Enum
+}
+export interface IntArrayField {
+    id: string,
+    type: FieldType.IntArray
+    value: number[]
+}
+export interface FloatArrayField {
+    id: string,
+    type: FieldType.FloatArray
+    value: number[]
+}
+export interface StringArrayField {
+    id: string,
+    type: FieldType.StringArray
+    value: string[]
+}
+export interface BoolArrayField {
+    id: string,
+    type: FieldType.BoolArray
+    value: boolean[]
+}
+export interface ColorArrayField {
+    id: string,
+    type: FieldType.ColorArray
+    value: string[]
+}
+export interface PointArrayField {
+    id: string,
+    type: FieldType.PointArray
+    value: Point[]
+}
+export interface FilePathArrayField {
+    id: string,
+    type: FieldType.FilePathArray
+    value: string[]
+}
+export interface EnumArrayField {
+    id: string,
+    type: FieldType.EnumArray
+    value: string[]
+    /** Reference to the enum */
+    ref: Enum
 }
 
 /**
- * This is the root of any Project JSON file. 
+ * Represents a pre-parsed Entity field
  * 
- * It contains:  
- * - the project settings, 
- * - an array of levels, 
- * - and a definition object (that can probably be safely ignored for most users). 
+ * Examples: 
+ * 
+ * `Array<MyEnum.A>` will result in:
+ * ```
+ * { type: "Enum", value: "A", ref: MyEnum }
+ * ```
+ * Where `MyEnum` is not an identifier, but a
+ * reference to the Enum:
+ * ```
+ * const entity = layer.entities[0];
+ * entity.fields["enum_field"].ref.uid // you can access the enum properties
+ * ```
  */
-export interface LDtkProject {
-    /** Number of backup files to keep, if the "backupOnSave" is TRUE */
-    backupLimit: number
-    /** If TRUE, an extra copy of the project will be created in a sub folder, when saving. */
-    backupOnSave: boolean
-    /** Project background color */
-    bgColor: string
-    /** Default grid size for new layers */
-    defaultGridSize: number
-    /** Default background color of levels */
-    defaultLevelBgColor: string
-    /** Default X pivot (0 to 1) for new entities */
-    defaultPivotX: number
-    /** Default Y pivot (0 to 1) for new entities */
-    defaultPivotY: number
-    /** A interfaceure containing all the definitions of this project */
-    defs?: Definitions
-    /** If TRUE, all layers in all levels will also be exported as PNG along with the project file (default is FALSE) */
-    exportPng: boolean
-    /** If TRUE, a Tiled compatible file will also be generated along with the LDtk JSON file (default is FALSE) */
-    exportTiled: boolean
-    /** If TRUE, one file will be saved the project (incl. all its definitions) and one file per-level in a sub-folder. */
-    externalLevels: boolean
-    /** File format version */
-    jsonVersion: string
-    /** All levels. 
-     * 
-     * The order of this array is only relevant in "LinearHorizontal" and "linearVertical" world layouts (see "worldLayout" value). 
-     * 
-     * Otherwise, you should refer to the "worldX","worldY" coordinates of each Level. 
-     */
-    levels: Array<Level>
-    /** If TRUE, the Json is partially minified (no indentation, nor line breaks, default is FALSE) */
-    minifyJson: boolean
-    nextUid: number
-    /** Height of the world grid in pixels. */
-    worldGridHeight: number
-    /** Width of the world grid in pixels. */
-    worldGridWidth: number
-    /** 
-     * An enum that describes how levels are organized in this project (ie. linearly or in a 2D space). 
-     * 
-     * Possible values: "Free", "GridVania", "LinearHorizontal", "LinearVertical" 
-     */
-    worldLayout?: WorldLayout
+export type Field =
+    | IntField
+    | FloatField
+    | StringField
+    | BoolField
+    | ColorField
+    | PointField
+    | FilePathField
+    | EnumField
+    | IntArrayField
+    | FloatArrayField
+    | StringArrayField
+    | BoolArrayField
+    | ColorArrayField
+    | PointArrayField
+    | FilePathArrayField
+    | EnumArrayField
+
+const FieldTypeRegex = /(?:Array<)*(?:(\w+)Enum)*\.*(\w+)>*/;
+function parseField(field: LDtk.FieldInstance, world: World, entityId: string): Field {
+    // search for type with format `(Array<)? (LocalEnum|ExternalEnum)? (.)? TYPE (>)?`
+    // and capture $1 = (LocalEnum|ExternalEnum) and $2 = TYPE
+    const result = FieldTypeRegex.exec(field.__type);
+
+    if (result == null) // sanity check, should never happen
+        throw new Error(`Error at field '${field.__identifier}' entity '${entityId}': Invalid type name ${field.__type}`);
+
+    // it's an array type if it's in the form Array<T>
+    const isArray = field.__type.startsWith("Array");
+    // it's an enum type if capture $1 is not null
+    const isEnum = result[1] != null;
+
+    // no need to transform id, just use it directly
+    const id = field.__identifier;
+
+    // transform the type to fit our own definition
+    // e.g. Array<T> -> TArray
+    /** @see {FieldType} */
+    let type = result[2] as any;
+    const typeName = type;
+    if (isEnum) type = "Enum";
+    if (isArray) type += "Array";
+
+    // grab the field value
+    let value = field.__value;
+    if (value != null && type === FieldType.Point)
+        value = { x: (value as any)[0], y: (value as any)[1] };
+    if (type === FieldType.PointArray)
+        (value as [number, number][]).map(v => ({ x: v[0], y: v[1] }));
+
+    const output = {
+        id,
+        type,
+        value
+    } as any;
+    if (isEnum) output.ref = world.enumMap[typeName];
+
+    return output;
 }
-/** 
- * A interface containing all the definitions of this project If you're writing your own LDtk importer, 
- * you should probably just ignore *most* stuff in the "defs" section, 
- * as it contains data that are mostly important to the editor. 
- * 
- * To keep you away from the "defs" section and avoid some unnecessary JSON parsing, 
- * important data from definitions is often duplicated in fields prefixed with a double underscore (eg. "__identifier" or "__type"). 
- * 
- * The 2 only definition types you might need here are **Tilesets** and **Enums**. 
- */
-export interface Definitions {
-    entities: Array<EntityDefinition>
-    enums: Array<EnumDefinition>
-    /** Note: external enums are exactly the same as "enums", except they have a "relPath" to point to an external source file. */
-    externalEnums: Array<EnumDefinition>
-    layers: Array<LayerDefinition>
-    tilesets: Array<TilesetDefinition>
+
+class Entity {
+    readonly fields: Readonly<Record<string, Field>>;
+
+    private tileset_: Tileset | undefined;
+
+    constructor(
+        public readonly world: World,
+        private data: LDtk.EntityInstance,
+        private pxOffset: Point,
+    ) {
+        this.fields = {};
+        for (let i = 0; i < data.fieldInstances.length; ++i) {
+            const instance = data.fieldInstances[i];
+            (this.fields as Record<string, Field>)[instance.__identifier] = parseField(instance, world, this.id);
+        }
+
+        // @ts-ignore accessing private property
+        const worldData = world.data;
+        const entities = worldData.defs?.entities;
+        if (entities != null) {
+            for (let i = 0; i < entities.length; ++i) {
+                if (entities[i].uid === this.data.defUid) {
+                    const tilesetId = entities[i].tilesetId
+                    if (tilesetId != null) {
+                        this.tileset_ = world.tilesetMap[tilesetId];
+                    }
+                }
+            }
+        }
+
+    }
+
+    /** Grid coordinates */
+    get gridPos(): Point {
+        return {
+            x: this.data.__grid[0],
+            y: this.data.__grid[1],
+        };
+    }
+
+    /** Entity definition identifier */
+    get id(): string {
+        return this.data.__identifier;
+    }
+
+    /** Pivot coordinates (values are from 0 to 1) of the Entity */
+    get pivot(): Point {
+        return {
+            x: this.data.__pivot[0],
+            y: this.data.__pivot[1],
+        };
+    }
+
+    /** 
+     * Optional Tile used to display this entity (it could either be the default Entity tile, 
+     * or some tile provided by a field value, like an Enum).
+     */
+    get tile() {
+        return this.data.__tile;
+    }
+
+    /**
+     * Optional Tileset used to display this etity
+     */
+    get tileset() {
+        return this.tileset_;
+    }
+
+    /** 
+     * Pixel coordinates with all offsets applied
+     */
+    get pos(): Point {
+        return {
+            x: this.data.px[0] + this.pxOffset.x,
+            y: this.data.px[1] + this.pxOffset.y,
+        };
+    }
+
+    /**
+     * Pixel coordinates without applied offsets
+     */
+    get relativePos(): Point {
+        return {
+            x: this.data.px[0],
+            y: this.data.px[1],
+        };
+    }
 }
-export interface EntityDefinition {
-    /** Base entity color */
-    color: string
-    /** Array of field definitions */
-    fieldDefs: Array<FieldDefinition>
-    /** Pixel height */
-    height: number
-    /** Unique string identifier */
-    identifier: string
-    /** Possible values: "DiscardOldOnes", "PreventAdding", "MoveLastOne" */
-    limitBehavior?: LimitBehavior
-    /** Max instances per level */
-    maxPerLevel: number
-    /** Pivot X coordinate (from 0 to 1.0) */
-    pivotX: number
-    /** Pivot Y coordinate (from 0 to 1.0) */
-    pivotY: number
-    /** Possible values: "Rectangle", "Ellipse", "Tile", "Cross" */
-    renderMode?: RenderMode
-    /** Display entity name in editor */
-    showName: boolean
-    /** Tile ID used for optional tile display */
-    tileId?: number
-    /** Possible values: "Stretch", "Crop" */
-    tileRenderMode?: TileRenderMode
-    /** Tileset ID used for optional tile display */
-    tilesetId?: number
-    /** Unique Int identifier */
-    uid: number
-    /** Pixel width */
-    width: number
-}
-/** 
- * This section is mostly only intended for the LDtk editor app itself. 
- * You can safely ignore it. 
- */
-export interface FieldDefinition {
-    /** 
-     * Human readable value type (eg. "Int", "Float", "Point", etc.). 
-     * 
-     * If the field is an array, this field will look like "Array<...>" (eg. "Array<Int>", "Array<Point>" etc.) 
-     */
-    __type: string
-    /** 
-     * Optional list of accepted file extensions for FilePath value type. 
-     * 
-     * Includes the dot: ".ext" */
-    acceptFileTypes?: Array<string>
-    /** Array max length */
-    arrayMaxLength?: number
-    /** Array min length */
-    arrayMinLength?: number
-    /** 
-     * TRUE if the value can be null. 
-     * 
-     * For arrays, TRUE means it can contain null values (exception: array of Points can't have null values). */
-    canBeNull: boolean
-    /** Default value if selected value is null or invalid. */
-    defaultOverride?: unknown
-    editorAlwaysShow: boolean
-    /** Possible values: "Hidden", "ValueOnly", "NameAndValue", "EntityTile", "PointStar", "PointPath", "RadiusPx", "RadiusGrid" */
-    editorDisplayMode?: EditorDisplayMode
-    /** Possible values: "Above", "Center", "Beneath" */
-    editorDisplayPos?: EditorDisplayPos
-    /** Unique string identifier */
-    identifier: string
-    /** TRUE if the value is an array of multiple values */
-    isArray: boolean
-    /** Max limit for value, if applicable */
-    max?: number
-    /** Min limit for value, if applicable */
-    min?: number
-    /** 
-     * Optional regular expression that needs to be matched to accept values. 
-     * 
-     * Expected format: "/someRegEx/g", with optional "i" flag. 
-     */
-    regex?: string
-    /** Internal type enum */
-    purpleType?: unknown
-    /** Unique Intidentifier */
-    uid: number
-}
-export interface EnumDefinition {
-    externalFileChecksum?: string
-    /** Relative path to the external file providing this Enum */
-    externalRelPath?: string
-    /** Tileset UID if provided */
-    iconTilesetUid?: number
-    /** Unique string identifier */
-    identifier: string
-    /** Unique Int identifier */
-    uid: number
-    /** All possible enum values, with their optional Tile infos. */
-    values: Array<EnumValueDefinition>
-}
-export interface EnumValueDefinition {
-    /** An array of 4 Int values that refers to the tile in the tileset image: "[ x, y, width, height ]" */
-    __tileSrcRect: Array<number>
-    /** Enum value */
-    id: string
-    /** The optional ID of the tile */
-    tileId?: number
-}
-export interface LayerDefinition {
-    /** Type of the layer (*IntGrid, Entities, Tiles, AutoLayer*) */
-    __type: string
-    /** Contains all the auto-layer rule definitions. */
-    autoRuleGroups: Array<{ [i: string]: unknown }>,
-    autoSourceLayerDefUid?: number
-    /** Reference to the Tileset UID being used by this auto-layer rules */
-    autoTilesetDefUid?: number
-    /** Opacity of the layer (0 to 1.0) */
-    displayOpacity: number
-    /** Width and height of the grid in pixels */
-    gridSize: number
-    /** Unique string identifier */
-    identifier: string
-    /** An array (using IntGrid value as array index, starting from 0) that defines extra optional info for each IntGrid value. */
-    intGridValues: Array<IntGridValueDefinition>
-    /** X offset of the layer, in pixels (IMPORTANT: this should be added to the "LayerInstance" optional offset) */
-    pxOffsetX: number
-    /** Y offset of the layer, in pixels (IMPORTANT: this should be added to the "LayerInstance" optional offset) */
-    pxOffsetY: number
-    /** If the tiles are smaller or larger than the layer grid, the pivot value will be used to position the tile relatively its grid cell. */
-    tilePivotX: number
-    /** If the tiles are smaller or larger than the layer grid, the pivot value will be used to position the tile relatively its grid cell. */
-    tilePivotY: number
-    /** Reference to the Tileset UID being used by this Tile layer */
-    tilesetDefUid?: number
-    /** Type of the layer as an Enum Possible values: "IntGrid", "Entities", "Tiles", "AutoLayer" */
-    purpleType?: Type
-    /** Unique Int identifier */
-    uid: number
-}
-/** IntGrid value definition */
-export interface IntGridValueDefinition {
-    color: string
-    /** Unique string identifier */
-    identifier?: string
-}
-/** 
- * The "Tileset" definition is the most important part among project definitions. 
- * 
- * It contains some extra informations about each integrated tileset. 
- * 
- * If you only had to parse one definition section, that would be the one. 
- */
-export interface TilesetDefinition {
-    /** 
-     * The following data is used internally for various optimizations.
-     * 
-     *  It's always synced with source image changes. 
-     */
-    cachedPixelData?: { [i: string]: unknown }
-    /** Unique string identifier */
-    identifier: string
-    /** Distance in pixels from image borders */
-    padding: number
-    /** Image height in pixels */
-    pxHei: number
-    /** Image width in pixels */
-    pxWid: number
-    /** Path to the source file, relative to the current project JSON file */
-    relPath: string
-    /** Array of group of tiles selections, only meant to be used in the editor */
-    savedSelections: Array<{ [i: string]: unknown }>
-    /** Space in pixels between all tiles */
-    spacing: number
-    tileGridSize: number
-    /** Unique Intidentifier */
-    uid: number
-}
-/** 
- * This section contains all the level data. 
- * 
- * It can be found in 2 distinct forms, depending on Project current settings:  
- * - If "*Separate level files*" is **disabled** (default): 
- * 
- * Full level data is *embedded* inside the main Project JSON file
- * 
- * - If "*Separate level files*" is **enabled**: 
- * 
- * Level data is stored in *separate* standalone ".ldtkl" files (one per level). 
- * In this case, the main Project JSON file will still contain most level data, except heavy sections, like the "layerInstances" array (which will be null). 
- * The "externalRelPath" string points to the "ldtkl" file.  A "ldtkl" file is just a JSON file containing exactly what is described below. 
- */
-export interface Level {
-    /** Background color of the level (same as "bgColor", except the default value is automatically used here if its value is "null") */
-    __bgColor: string
-    /** Position informations of the background image, if there is one. */
-    __bgPos?: LevelBackgroundPosition
-    /** An array listing all other levels touching this one on the world map. In "linear" world layouts, this array is populated with previous/next levels in array, and "dir" depends on the linear horizontal/vertical layout. */
-    __neighbours: Array<NeighbourLevel>
-    /** Background color of the level. If "null", the project "defaultLevelBgColor" should be used. */
-    bgColor?: string
-    /** Background image X pivot (0-1) */
-    bgPivotX: number
-    /** Background image Y pivot (0-1) */
-    bgPivotY: number
-    /** 
-     * An enum defining the way the background image (if any) is positioned on the level. 
-     * 
-     * See "__bgPos" for resulting position info. 
-     * 
-     * Possible values: "Unscaled", "Contain", "Cover", "CoverDirty" 
-     */
-    bgPos?: BgPos
-    /** The *optional* relative path to the level background image. */
-    bgRelPath?: string
-    /** 
-     * This value is not null if the project option "*Save levels separately*" is enabled. 
-     * 
-     * In this case, this **relative** path points to the level Json file. 
-     */
-    externalRelPath?: string
-    /** Unique string identifier */
-    identifier: string
-    /** 
-     * An array containing all Layer instances. 
-     * 
-     * **IMPORTANT**: if the project option "*Save levels separately*" is enabled, 
-     * this field will be "null".
-     * 
-     * This array is **sorted in display order**: the 1st layer is the top-most and the last is behind. 
-     */
-    layerInstances?: Array<LayerInstance>
-    /** Height of the level in pixels */
-    pxHei: number
-    /** Width of the level in pixels */
-    pxWid: number
-    /** Unique Int identifier */
-    uid: number
-    /** World X coordinate in pixels */
-    worldX: number
-    /** World Y coordinate in pixels */
-    worldY: number
-}
-/** 
- * Position informations of the background image, if there is one. 
- * 
- * Level background image position info 
- */
-export interface LevelBackgroundPosition {
-    /** 
-     * An array of 4 float values describing the cropped sub-rectangle of the displayed background image. 
-     * 
-     * This cropping happens when original is larger than the level bounds. 
-     * 
-     * Array format: "[ cropX, cropY, cropWidth, cropHeight ]" 
-     */
-    cropRect: [cropX: number, cropY: number, cropWidth: number, cropHeight: number]
-    /** 
-     * An array containing the "[scaleX,scaleY]" values of the **cropped** background image, 
-     * depending on "bgPos" option. 
-     */
-    scale: [scaleX: number, scaleY: number]
-    /** 
-     * An array containing the "[x,y]" pixel coordinates of the top-left corner of the **cropped** background image, 
-     * depending on "bgPos" option. 
-     */
-    topLeftPx: [x: number, y: number]
-}
-export interface LayerInstance {
-    /** Grid-based height */
-    __cHei: number
-    /** Grid-based width */
-    __cWid: number
-    /** Grid size */
-    __gridSize: number
-    /** Layer definition identifier */
-    __identifier: string
-    /** Layer opacity as Float [0-1] */
-    __opacity: number
-    /** Total layer X pixel offset, including both instance and definition offsets. */
-    __pxTotalOffsetX: number
-    /** Total layer Y pixel offset, including both instance and definition offsets. */
-    __pxTotalOffsetY: number
-    /** The definition UID of corresponding Tileset, if any. */
-    __tilesetDefUid?: number
-    /** The relative path to corresponding Tileset, if any. */
-    __tilesetRelPath?: string
-    /** Layer type (possible values: IntGrid, Entities, Tiles or AutoLayer) */
-    __type: string
-    /** 
-     * An array containing all tiles generated by Auto-layer rules. 
-     * 
-     * The array is already sorted in display order (ie. 1st tile is beneath 2nd, which is beneath 3rd etc.).
-     * 
-     * Note: if multiple tiles are stacked in the same cell as the result of different rules, 
-     * all tiles behind opaque ones will be discarded. 
-     */
-    autoLayerTiles: Array<TileInstance>
-    entityInstances: Array<EntityInstance>
-    gridTiles: Array<TileInstance>
-    intGrid: Array<IntGridValueInstance>
-    /** Reference the Layer definition UID */
-    layerDefUid: number
-    /** Reference to the UID of the level containing this layer instance */
-    levelId: number
-    /** 
-     * X offset in pixels to render this layer, usually 0
-     * 
-     * **IMPORTANT**: this should be added to the "LayerDef" optional offset, see "__pxTotalOffsetX"
-     */
-    pxOffsetX: number
-    /** 
-     * Y offset in pixels to render this layer, usually 0
-     * 
-     * **IMPORTANT**: this should be added to the "LayerDef" optional offset, see "__pxTotalOffsetY"
-     */
-    pxOffsetY: number
-    /** Random seed used for Auto-Layers rendering */
-    seed: number
-}
-/** This interfaceure represents a single tile from a given Tileset. */
-export interface TileInstance {
-    /** 
-     * Internal data used by the editor.
-     * 
-     * For auto-layer tiles: "[ruleId, coordId]".
-     * 
-     * For tile-layer tiles: "[coordId]".
-     */
-    d: [ruleId: number, coordId: number] | [coordId: number]
+
+interface Tile {
     /** 
      * "Flip bits", a 2-bits integer to represent the mirror transformations of the tile.
-     * - Bit 0 = X flip<br/>   
-     * - Bit 1 = Y flip<br/>
+     * - Bit 0 = X flip 
+     * - Bit 1 = Y flip
      * 
      * Examples: 
      * - f == 0 -> no flip
@@ -436,138 +310,512 @@ export interface TileInstance {
     /** The *Tile ID* in the corresponding tileset. */
     t: number
 }
-export interface EntityInstance {
-    /** Grid-based coordinates */
-    __grid: [x: number, y: number]
-    /** Entity definition identifier */
-    __identifier: string
-    /** Pivot coordinates (values are from 0 to 1) of the Entity */
-    __pivot: [x: number, y: number]
-    /** 
-     * Optional Tile used to display this entity (it could either be the default Entity tile, 
-     * or some tile provided by a field value, like an Enum).
-     */
-    __tile?: EntityInstanceTile
-    /** Reference of the **Entity definition** UID */
-    defUid: number
-    fieldInstances: Array<FieldInstance>
-    /** 
-     * Pixel coordinates in current level coordinate space. 
-     * 
-     * Don't forget optional layer offsets, if they exist! 
-     */
-    px: [x: number, y: number]
-}
-export interface FieldInstance {
-    /** Field definition identifier */
-    __identifier: string
-    /** Type of the field, such as "Int", "Float", "Enum(myEnumName)", "boolean", etc. */
-    __type: string
-    /** 
-     * Actual value of the field instance. 
-     * 
-     * The value type may vary, depending on "__type" (Integer, booleanean, string etc.)
-     * 
-     * It can also be an "Array" of those same types.
-     */
-    __value?: unknown
-    /** Reference of the **Field definition** UID */
-    defUid: number
-    /** Editor internal raw values */
-    realEditorValues: Array<unknown>
-}
-/** 
- * Optional Tile used to display this entity (it could either be the default Entity tile, 
- * or some tile provided by a field value, like an Enum). 
- * 
- * Tile data in an Entity instance 
- */
-export interface EntityInstanceTile {
-    /** An array of 4 Int values that refers to the tile in the tileset image */
-    srcRect: [x: number, y: number, width: number, height: number]
-    /** Tileset ID */
-    tilesetUid: number
-}
-/** IntGrid value instance */
-export interface IntGridValueInstance {
+interface IntGridValue {
     /** Coordinate ID in the layer grid */
     coordId: number
     /** IntGrid value */
     v: number
 }
-/** Nearby level info */
-export interface NeighbourLevel {
-    /** A single lowercase character tipping on the level location ("n"orth, "s"outh, "w"est, "e"ast). */
-    dir: string
-    levelUid: number
+export const enum LayerType {
+    AutoLayer = "AutoLayer",
+    Entities = "Entities",
+    IntGrid = "IntGrid",
+    Tiles = "Tiles",
 }
-/** Possible values: "EntityTile", "Hidden", "NameAndValue", "PointPath", "PointStar", "RadiusGrid", "RadiusPx", "ValueOnly" */
-export const enum EditorDisplayMode {
-    EntityTile,
-    Hidden,
-    NameAndValue,
-    PointPath,
-    PointStar,
-    RadiusGrid,
-    RadiusPx,
-    ValueOnly,
+class Layer {
+    private autoLayerTiles_: Tile[] | null = null;
+    private entities_: Entity[] | null = null;
+    private gridTiles_: Tile[] | null = null;
+    private intGrid_: IntGridValue[] | null = null;
+
+    constructor(
+        public readonly world: World,
+        private data: LDtk.LayerInstance
+    ) {
+        switch (this.type) {
+            case LayerType.AutoLayer: {
+                this.autoLayerTiles_ = data.autoLayerTiles;
+            } break;
+            case LayerType.Entities: {
+                this.entities_ = [];
+                for (let i = 0; i < data.entityInstances.length; ++i) {
+                    const instance = data.entityInstances[i];
+                    this.entities_[i] = new Entity(world, instance, this.pxTotalOffset);
+                }
+            } break;
+            case LayerType.Tiles: {
+                this.gridTiles_ = data.gridTiles;
+            } break;
+            case LayerType.IntGrid: {
+                this.intGrid_ = data.intGrid;
+            } break;
+        }
+    }
+
+    /** Grid-based width/height. */
+    get size(): Size {
+        return {
+            width: this.data.__cWid,
+            height: this.data.__cHei,
+        };
+    }
+
+    /** Size of a grid cell. */
+    get gridSize() {
+        return this.data.__gridSize;
+    }
+
+    get opacity() {
+        return this.data.__opacity;
+    }
+
+    /** Total layer pixel offset, including both instance and definition offsets. */
+    get pxTotalOffset(): Point {
+        return {
+            x: this.data.__pxTotalOffsetX,
+            y: this.data.__pxTotalOffsetY,
+        };
+    }
+
+    /** 
+     * Possible values: `AutoLayer`, `Entities`, `Tiles`, `IntGrid`
+     * 
+     * @see LayerType
+     */
+    get type(): LayerType {
+        return this.data.__type as LayerType;
+    }
+
+    /** Non-null if `this.type === "AutoLayer"` */
+    get autoLayerTiles(): readonly Tile[] | null {
+        return this.autoLayerTiles_;
+    }
+
+    /** Non-null if `this.type === "Entities"` */
+    get entities(): readonly Entity[] | null {
+        return this.entities_;
+    }
+
+    /** Non-null if `this.type === "Tiles"` */
+    get gridTiles(): readonly Tile[] | null {
+        return this.gridTiles_;
+    }
+
+    /** Non-null if `this.type === "IntGrid"` */
+    get intGrid(): readonly IntGridValue[] | null {
+        return this.intGrid_;
+    }
+
+    /** UID of the level this layer belongs to */
+    get levelUid(): number {
+        return this.data.levelId;
+    }
+
+    /** Optional tileset used to render the layer */
+    get tileset(): Tileset | undefined {
+        if (this.data.__tilesetDefUid == null) return;
+        return this.world.tilesetMap[this.data.__tilesetDefUid];
+    }
 }
-/** Possible values: "Above", "Beneath", "Center" */
-export const enum EditorDisplayPos {
-    Above,
-    Beneath,
-    Center,
+
+class Background {
+    constructor(private data: LDtk.Level) { }
+
+    get color() {
+        return this.data.__bgColor;
+    }
+
+    get pos() {
+        return this.data.__bgPos;
+    }
+
+    get pivot(): Point {
+        return {
+            x: this.data.bgPivotX,
+            y: this.data.bgPivotY,
+        };
+    }
+
+    get path() {
+        return this.data.bgRelPath;
+    }
 }
-/** Possible values: "DiscardOldOnes", "MoveLastOne", "PreventAdding" */
-export const enum LimitBehavior {
-    DiscardOldOnes,
-    MoveLastOne,
-    PreventAdding,
+interface Neighbour {
+    dir: "n" | "s" | "w" | "e"
+    level: Level
 }
-/** Possible values: "Cross", "Ellipse", "Rectangle", "Tile" */
-export const enum RenderMode {
-    Cross,
-    Ellipse,
-    Rectangle,
-    Tile,
+class Level {
+    readonly background: Background;
+
+    /** 
+     * An array containing all layer instances.
+     * 
+     * This array is **sorted in display order**: the 1st layer is the top-most and the last is behind.
+     */
+    readonly layers: ReadonlyArray<Layer> = [];
+
+    private neighbours_: Neighbour[] | null = [];
+
+    constructor(
+        public readonly world: World,
+        private data: LDtk.Level
+    ) {
+        this.background = new Background(data);
+        if (this.data.layerInstances != null) {
+            for (let i = 0; i < this.data.layerInstances.length; ++i) {
+                (this.layers as Array<Layer>)[i] = new Layer(world, this.data.layerInstances[i]);
+            }
+        }
+    }
+
+    /** Unique string identifier */
+    get id() {
+        return this.data.identifier;
+    }
+
+    /** Width/Height of the level in pixels */
+    get size(): Size {
+        return {
+            width: this.data.pxWid,
+            height: this.data.pxHei
+        };
+    }
+
+    /** Unique Int identifier */
+    get uid() {
+        return this.data.uid;
+    }
+
+    /** World X/Y coordinates in pixels */
+    get pos(): Point {
+        return {
+            x: this.data.worldX,
+            y: this.data.worldY
+        };
+    }
+
+    get neighbours(): Neighbour[] {
+        // lazily load neighbours
+        // reason: attempting to find neighbours before
+        // all neighbours have been found may result in
+        // returning undefined based on loading order
+        if (this.neighbours_ == null) {
+            this.neighbours_ = [];
+            for (let i = 0; i < this.data.__neighbours.length; ++i) {
+                const ref = this.world.findLevelByUid(this.data.__neighbours[i].levelUid);
+                if (!ref) // sanity check, should never happen
+                    throw new Error(`Neighbour '${this.data.__neighbours[i].levelUid}' for level '${this.data.identifier}' does not exist.`);
+                (this.neighbours as Neighbour[])[i] = {
+                    dir: this.data.__neighbours[i].dir,
+                    level: ref,
+                }
+            }
+        }
+        return this.neighbours_;
+    }
 }
-/** Possible values: "Crop", "Stretch" */
-export const enum TileRenderMode {
-    Crop,
-    Stretch,
+
+interface EnumValue {
+    id: string
+    tileId?: number
+    tileSrcRect: { x: number, y: number, width: number, height: number }
 }
-/** 
- * Type of the layer as an Enum 
- * 
- * Possible values: "AutoLayer", "Entities", "IntGrid", "Tiles"
- */
-export const enum Type {
-    AutoLayer,
-    Entities,
-    IntGrid,
-    Tiles,
+class Enum {
+    readonly valueMap: Readonly<Record<string, EnumValue>>;
+    readonly valueKeys: string[];
+    readonly values: EnumValue[];
+
+    constructor(
+        public readonly world: World,
+        private data: LDtk.EnumDefinition
+    ) {
+        this.valueMap = {};
+        for (let i = 0; i < data.values.length; ++i) {
+            const v = data.values[i];
+            (this.valueMap as Record<string, EnumValue>)[v.id] = {
+                id: v.id,
+                tileId: v.tileId,
+                tileSrcRect: {
+                    x: v.__tileSrcRect[0],
+                    y: v.__tileSrcRect[1],
+                    width: v.__tileSrcRect[2],
+                    height: v.__tileSrcRect[3],
+                }
+            }
+        }
+        this.valueKeys = Object.keys(this.valueMap);
+        this.values = Object.values(this.valueMap);
+    }
+
+    /** Unique string identifier */
+    get id(): string {
+        return this.data.identifier;
+    }
+    /** Unique Int identifier */
+    get uid(): number {
+        return this.data.uid;
+    }
+    /** Optional icon tileset */
+    get tileset(): Tileset | undefined {
+        if (this.data.iconTilesetUid == null) return;
+        return this.world.tilesetMap[this.data.iconTilesetUid];
+    }
 }
-/** 
- * An enum defining the way the background image (if any) is positioned on the level. 
- * 
- * See "__bgPos" for resulting position info. 
- * 
- * Possible values: "Unscaled", "Contain", "Cover", "CoverDirty" 
- */
-export const enum BgPos {
-    Contain,
-    Cover,
-    CoverDirty,
-    Unscaled,
+
+class Tileset {
+    constructor(
+        public readonly world: World,
+        private data: LDtk.TilesetDefinition
+    ) { }
+
+    /** Unique string identifier */
+    get id(): string {
+        return this.data.identifier;
+    }
+    /** Distance in pixels from image borders */
+    get padding(): number {
+        return this.data.padding;
+    }
+    /** Image width/height in pixels */
+    get size(): Size {
+        return {
+            width: this.data.pxWid,
+            height: this.data.pxHei,
+        };
+    }
+    /** Path to the source file, relative to the current project JSON file */
+    get path(): string {
+        return this.data.relPath;
+    }
+    /** Space in pixels between all tiles */
+    get spacing(): number {
+        return this.data.spacing;
+    }
+    /** 
+     * Size of one tile 
+     * 
+     * This represents both width and height, because non-uniform tiles
+     * are not supported yet.
+     */
+    get gridSize(): number {
+        return this.data.tileGridSize;
+    }
+    /** Unique Intidentifier */
+    get uid(): number {
+        return this.data.uid;
+    }
 }
-/** 
- * An enum that describes how levels are organized in this project (ie. linearly or in a 2D space). 
- * 
- * Possible values: "Free", "GridVania", "LinearHorizontal", "LinearVertical" 
- */
-export const enum WorldLayout {
-    Free,
-    GridVania,
-    LinearHorizontal,
-    LinearVertical,
+
+export class World {
+    readonly levelMap: Readonly<Record<string, Level>>;
+    readonly levelKeys: string[];
+    readonly levels: Level[];
+
+    readonly tilesetMap: Readonly<Record<number, Tileset>>;
+    readonly tilesetIds: string[];
+    readonly tilesets: Tileset[];
+
+    readonly enumMap: Readonly<Record<string, Enum>>;
+    readonly enumKeys: string[];
+    readonly enums: Enum[];
+
+    private constructor(private data: LDtk.World) {
+        this.tilesetMap = {};
+        this.tilesetIds = [];
+        this.tilesets = [];
+        this.enumMap = {};
+        this.enumKeys = [];
+        this.enums = [];
+        if (data.defs != null) {
+            // load tilesets
+            for (let i = 0; i < data.defs.tilesets.length; ++i) {
+                const t = data.defs.tilesets[i];
+                (this.tilesetMap as Record<string, Tileset>)[t.uid] = new Tileset(this, t);
+            }
+            this.tilesetIds = Object.keys(this.tilesetMap);
+            this.tilesets = Object.values(this.tilesetMap);
+            // load enums
+            for (let i = 0; i < data.defs.enums.length; ++i) {
+                const e = data.defs.enums[i];
+                (this.enumMap as Record<string, Enum>)[e.identifier] = new Enum(this, e);
+            }
+            this.enumKeys = Object.keys(this.enumMap);
+            this.enums = Object.values(this.enumMap);
+        }
+
+        this.levelMap = {};
+        this.levelKeys = [];
+        this.levels = [];
+        if (!data.externalLevels) {
+            // load levels if we don't have separate level files
+            for (let i = 0; i < data.levels.length; ++i) {
+                (this.levelMap as Record<string, Level>)[data.levels[i].identifier] = new Level(this, data.levels[i]);
+            }
+            this.levelKeys = Object.keys(this.levelMap);
+            this.levels = Object.values(this.levelMap);
+        }
+    }
+
+    findLevel(predicate: (l: Level) => boolean): Level | undefined {
+        for (let i = 0; i < this.levels.length; ++i) {
+            if (predicate(this.levels[i])) return this.levels[i];
+        }
+    }
+    findTileset(predicate: (t: Tileset) => boolean): Tileset | undefined {
+        for (let i = 0; i < this.tilesets.length; ++i) {
+            if (predicate(this.tilesets[i])) return this.tilesets[i];
+        }
+    }
+    findEnum(predicate: (e: Enum) => boolean): Enum | undefined {
+        for (let i = 0; i < this.enums.length; ++i) {
+            if (predicate(this.enums[i])) return this.enums[i];
+        }
+    }
+
+    findLevelByUid(uid: number): Level | undefined {
+        return this.findLevel(l => l.uid === uid);
+    }
+    findTilesetById(id: string): Tileset | undefined {
+        return this.findTileset(t => t.id === id);
+    }
+    findTilesetByPath(path: string): Tileset | undefined {
+        return this.findTileset(t => t.path === path);
+    }
+    findEnumByUid(uid: number): Enum | undefined {
+        return this.findEnum(e => e.uid === uid);
+    }
+
+    get externalLevels(): boolean {
+        return this.data.externalLevels;
+    }
+
+    get bgColor(): string {
+        return this.data.bgColor;
+    }
+
+    get layout() {
+        return this.data.worldLayout;
+    }
+
+    /**
+     * Load and parse all external levels and enums.
+     * 
+     * If a level is already loaded, it won't be loaded again.
+     */
+    async loadLevels(): Promise<void> {
+        const promises = [];
+        const levels = this.data.levels;
+        for (let i = 0; i < levels.length; ++i) {
+            const level = levels[i];
+            // don't load twice
+            if (this.levelMap[level.identifier] != null) {
+                continue;
+            }
+            // only load levels that are external
+            // in theory, all levels in an `externalLevels: true`
+            // world should be external, but this is just to
+            // satisfy typescript
+            const rel = level.externalRelPath
+            if (rel != null) {
+                promises.push(this.fetchLevel(rel).then(loaded => {
+                    (this.levelMap as Record<string, Level>)[loaded.id] = loaded;
+                    (this.levelKeys as string[])[i] = loaded.id;
+                    (this.levels as Level[])[i] = loaded;
+                }));
+            }
+        }
+        // wait until all have loaded, then resolve
+        await Promise.all(promises);
+        return;
+    }
+
+    /**
+     * Load and parse external level `identifier`.
+     * 
+     * This allows for dynamically loading individual levels.
+     * 
+     * If a level is already loaded, it won't be loaded again.
+     */
+    async loadLevel(identifier: string): Promise<void> {
+        // don't load twice
+        if (this.levelMap[identifier] != null) {
+            return;
+        }
+        // grab the index so that we can maintain the level order
+        let levelIndex = -1;
+        let level = null;
+        for (let i = 0; i < this.data.levels.length; ++i) {
+            if (this.data.levels[i].identifier === identifier) {
+                level = this.data.levels[i];
+                levelIndex = i;
+                break;
+            }
+        }
+        if (level == null) throw new Error(`Level ${identifier} does not exist!`);
+        const loaded = await this.fetchLevel(level.externalRelPath!);
+        (this.levelMap as Record<string, Level>)[loaded.id] = loaded;
+        (this.levelKeys as string[])[levelIndex] = loaded.id;
+        (this.levels as Level[])[levelIndex] = loaded;
+    }
+
+    /**
+     * Unload a single level.
+     * 
+     * This only works if you're not holding any strong references
+     * to the level somewhere.
+     */
+    unloadLevel(identifier: string) {
+        for (let i = 0; i < this.levelKeys.length; ++i) {
+            const key = this.levelKeys[i];
+            if (key === identifier) {
+                delete (this.levelMap as Record<string, Level>)[key];
+                delete this.levels[i];
+                delete this.levelKeys[i];
+                break;
+            }
+        }
+    }
+
+    /**
+     * Parse an existing JSON object as an LDtk project file
+     */
+    static fromJSON(data: LDtk.World): World {
+        // TODO: validation?
+        return new World(data);
+    }
+
+    /**
+     * Asynchronously load and parse an LDtk project file
+     */
+    static async fromURL(path: string): Promise<World> {
+        return new World(await loadJSON(path));
+    }
+
+    private async fetchLevel(path: string): Promise<Level> {
+        return new Level(this, await loadJSON(path));
+    }
+
+    /**
+     * Load the raw JSON without any utilities.
+     * 
+     * This does the following in Node:
+     * ```
+     * const PATH = "assets/world.ldtk";
+     * import * as fs from "fs";
+     * const world = await new Promise((resolve, reject) => {
+     *     fs.readFile(PATH, { encoding: "utf-8" }, (err, data) => {
+     *          if (err) reject(err);
+     *          else resolve(JSON.parse(data) as LDtk.World);
+     *     });
+     * })
+     * ```
+     * And in the browser:
+     * ```
+     * const PATH = "assets/world.ldtk";
+     * const world = await (await fetch(PATH)).json() as LDtk.World;
+     * ```
+     */
+    static async loadRaw(path: string): Promise<LDtk.World> {
+        return await loadJSON(path);
+    }
 }

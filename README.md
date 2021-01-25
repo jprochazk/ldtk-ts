@@ -1,17 +1,24 @@
 # ldtk-ts
 
-LDtk type definitions and parser.
+LDtk file format type definitions, and import wrapper providing an API without all the noise of LDtk "editor-only" values, definitions, etc. It's also possible to use the type definitions only, and work with the raw JSON file.
 
-It's just a wrapper over `JSON.parse`.
+### Usage
+
+**Using the import wrapper**
 
 ```ts
-import { Project } from "ldtk";
+import { World, LDtk } from "ldtk";
 
-async function loadAssets() {
-    // From existing JSON
-    const json = await (await fetch("assets/level/my_ldtk_level.ldtk")).json();
-    const project: LDtkProject = Project.fromJSON(json);
-    // Or as a convenience, from a URL
-    // This just wraps `fetch`
-    const project: LDtkProject = await Project.fromURL("assets/level/my_ldtk_level.ldtk");
-}
+World.fromURL("assets/world.ldtk").then(async world => {
+    let currentLevel = world.levelMap["Level1"];
+    function loop(time) {
+        render(currentLevel);
+
+        window.requestAnimationFrame(loop);
+    }
+    window.requestAnimationFrame(loop)
+});
+```
+
+There is a lot more to the API. Full documentation is currently unavailable, but everything inside
+the source files is thoroughly commented.
