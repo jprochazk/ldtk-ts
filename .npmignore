@@ -1,6 +1,8 @@
 .github
+docs
 node_modules
 src
+src/*.test.ts
 .eslintignore
 .eslintrc.js
 .gitignore
