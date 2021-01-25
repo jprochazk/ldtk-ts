@@ -203,7 +203,7 @@ function parseField(field: LDtk.FieldInstance, world: World, entityId: string): 
     return output;
 }
 
-class Entity {
+export class Entity {
     /**
      * Map of entity fields.
      * 
@@ -334,7 +334,7 @@ class Entity {
 /**
  * Represents a single `Tile` instance.
  */
-interface Tile {
+export interface Tile {
     /** 
      * "Flip bits", a 2-bits integer to represent the mirror transformations of the tile.
      * - Bit 0 = X flip 
@@ -376,13 +376,13 @@ export const enum LayerType {
     IntGrid = "IntGrid",
     Tiles = "Tiles",
 }
-interface IntGridValueDef {
+export interface IntGridValueDef {
     /** Color (RGB hex string) */
     color: string
     /** Unique string identifier */
     id?: string
 }
-class Layer {
+export class Layer {
     private autoLayerTiles_: Tile[] | null = null;
     private entities_: Entity[] | null = null;
     private gridTiles_: Tile[] | null = null;
@@ -573,7 +573,7 @@ class Layer {
     }
 }
 
-class Background {
+export class Background {
     constructor(private data: LDtk.Level) { }
 
     /**
@@ -620,11 +620,11 @@ class Background {
  * 
  * {@link Level}
  */
-interface Neighbour {
+export interface Neighbour {
     dir: "n" | "s" | "w" | "e"
     level: Level
 }
-class Level {
+export class Level {
     /**
      * {@link Background}
      */
@@ -712,7 +712,7 @@ class Level {
 /**
  * An Enum value
  */
-interface EnumValue {
+export interface EnumValue {
     /**
      * Unique string identifier
      */
@@ -722,7 +722,7 @@ interface EnumValue {
      */
     tileSrcRect: { x: number, y: number, width: number, height: number }
 }
-class Enum {
+export class Enum {
     /**
      * A map of Enum value ids to Enum values.
      * 
@@ -780,7 +780,7 @@ class Enum {
     }
 }
 
-class Tileset {
+export class Tileset {
     constructor(
         public readonly world: World,
         private data: LDtk.TilesetDefinition
