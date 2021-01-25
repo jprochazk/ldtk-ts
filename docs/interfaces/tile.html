@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PointArrayField | ldtk</title>
+	<title>Tile | ldtk</title>
 	<meta name="description" content="Documentation for ldtk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,21 +55,28 @@
 					<a href="../index.html">ldtk</a>
 				</li>
 				<li>
-					<a href="pointarrayfield.html">PointArrayField</a>
+					<a href="tile.html">Tile</a>
 				</li>
 			</ul>
-			<h1>Interface PointArrayField</h1>
+			<h1>Interface Tile</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Represents a single <code>Tile</code> instance.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">PointArrayField</span>
+						<span class="target">Tile</span>
 					</li>
 				</ul>
 			</section>
@@ -80,9 +87,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pointarrayfield.html#id" class="tsd-kind-icon">id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pointarrayfield.html#type" class="tsd-kind-icon">type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pointarrayfield.html#value" class="tsd-kind-icon">value</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="tile.html#f" class="tsd-kind-icon">f</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="tile.html#px" class="tsd-kind-icon">px</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="tile.html#src" class="tsd-kind-icon">src</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="tile.html#t" class="tsd-kind-icon">t</a></li>
 							</ul>
 						</section>
 					</div>
@@ -91,34 +99,82 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="id" class="tsd-anchor"></a>
-					<h3>id</h3>
-					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="f" class="tsd-anchor"></a>
+					<h3>f</h3>
+					<div class="tsd-signature tsd-kind-icon">f<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L113">index.ts:113</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L349">index.ts:349</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>&quot;Flip bits&quot;, a 2-bits integer to represent the mirror transformations of the tile.</p>
+							<ul>
+								<li>Bit 0 = X flip</li>
+								<li>Bit 1 = Y flip</li>
+							</ul>
+						</div>
+						<p>Examples:</p>
+						<ul>
+							<li>f == 0 -&gt; no flip</li>
+							<li>f == 1 -&gt; X flip only</li>
+							<li>f == 2 -&gt; Y flip only</li>
+							<li>f == 3 -&gt; both flips</li>
+						</ul>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="type" class="tsd-anchor"></a>
-					<h3>type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <a href="../enums/fieldtype.html#pointarray" class="tsd-signature-type" data-tsd-kind="Enumeration member">PointArray</a></div>
+					<a name="px" class="tsd-anchor"></a>
+					<h3>px</h3>
+					<div class="tsd-signature tsd-kind-icon">px<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L114">index.ts:114</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L362">index.ts:362</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Pixel coordinates of the tile in the <strong>layer</strong>.</p>
+						</div>
+						<p>World position of a tile:</p>
+						<pre><code><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">layer</span><span style="color: #000000"> = ...;</span>
+<span style="color: #AF00DB">for</span><span style="color: #000000"> (</span><span style="color: #001080">tile</span><span style="color: #000000"> </span><span style="color: #0000FF">in</span><span style="color: #000000"> </span><span style="color: #001080">layer</span><span style="color: #000000">.</span><span style="color: #001080">tiles</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tileWorldX</span><span style="color: #000000"> = </span><span style="color: #001080">tile</span><span style="color: #000000">.</span><span style="color: #001080">px</span><span style="color: #000000">[</span><span style="color: #098658">0</span><span style="color: #000000">] + </span><span style="color: #001080">layer</span><span style="color: #000000">.</span><span style="color: #001080">pxTotalOffset</span><span style="color: #000000">.</span><span style="color: #001080">x</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tileWorldY</span><span style="color: #000000"> = </span><span style="color: #001080">tile</span><span style="color: #000000">.</span><span style="color: #001080">px</span><span style="color: #000000">[</span><span style="color: #098658">1</span><span style="color: #000000">] + </span><span style="color: #001080">layer</span><span style="color: #000000">.</span><span style="color: #001080">pxTotalOffset</span><span style="color: #000000">.</span><span style="color: #001080">y</span>
+<span style="color: #000000">}</span>
+</code></pre>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="value" class="tsd-anchor"></a>
-					<h3>value</h3>
-					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <a href="point.html" class="tsd-signature-type" data-tsd-kind="Interface">Point</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="src" class="tsd-anchor"></a>
+					<h3>src</h3>
+					<div class="tsd-signature tsd-kind-icon">src<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L115">index.ts:115</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L364">index.ts:364</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Pixel coordinates of the tile in the <strong>tileset</strong></p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="t" class="tsd-anchor"></a>
+					<h3>t</h3>
+					<div class="tsd-signature tsd-kind-icon">t<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L366">index.ts:366</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The <em>Tile ID</em> in the corresponding tileset.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -207,24 +263,9 @@
 					<li class=" tsd-kind-interface">
 						<a href="point.html" class="tsd-kind-icon">Point</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface">
+					<li class=" tsd-kind-interface">
 						<a href="pointarrayfield.html" class="tsd-kind-icon">Point<wbr>Array<wbr>Field</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="pointarrayfield.html#id" class="tsd-kind-icon">id</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="pointarrayfield.html#type" class="tsd-kind-icon">type</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="pointarrayfield.html#value" class="tsd-kind-icon">value</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface">
 						<a href="pointfield.html" class="tsd-kind-icon">Point<wbr>Field</a>
 					</li>
@@ -237,9 +278,27 @@
 					<li class=" tsd-kind-interface">
 						<a href="stringfield.html" class="tsd-kind-icon">String<wbr>Field</a>
 					</li>
-					<li class=" tsd-kind-interface">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface">
 						<a href="tile.html" class="tsd-kind-icon">Tile</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="tile.html#f" class="tsd-kind-icon">f</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="tile.html#px" class="tsd-kind-icon">px</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="tile.html#src" class="tsd-kind-icon">src</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="tile.html#t" class="tsd-kind-icon">t</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-type-alias">
 						<a href="../index.html#field" class="tsd-kind-icon">Field</a>
 					</li>

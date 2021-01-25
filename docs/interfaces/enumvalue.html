@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PointArrayField | ldtk</title>
+	<title>EnumValue | ldtk</title>
 	<meta name="description" content="Documentation for ldtk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,21 +55,28 @@
 					<a href="../index.html">ldtk</a>
 				</li>
 				<li>
-					<a href="pointarrayfield.html">PointArrayField</a>
+					<a href="enumvalue.html">EnumValue</a>
 				</li>
 			</ul>
-			<h1>Interface PointArrayField</h1>
+			<h1>Interface EnumValue</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>An Enum value</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">PointArrayField</span>
+						<span class="target">EnumValue</span>
 					</li>
 				</ul>
 			</section>
@@ -80,9 +87,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pointarrayfield.html#id" class="tsd-kind-icon">id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pointarrayfield.html#type" class="tsd-kind-icon">type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pointarrayfield.html#value" class="tsd-kind-icon">value</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="enumvalue.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="enumvalue.html#tilesrcrect" class="tsd-kind-icon">tile<wbr>Src<wbr>Rect</a></li>
 							</ul>
 						</section>
 					</div>
@@ -96,29 +102,46 @@
 					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L113">index.ts:113</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L719">index.ts:719</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Unique string identifier</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="type" class="tsd-anchor"></a>
-					<h3>type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <a href="../enums/fieldtype.html#pointarray" class="tsd-signature-type" data-tsd-kind="Enumeration member">PointArray</a></div>
+					<a name="tilesrcrect" class="tsd-anchor"></a>
+					<h3>tile<wbr>Src<wbr>Rect</h3>
+					<div class="tsd-signature tsd-kind-icon">tile<wbr>Src<wbr>Rect<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L114">index.ts:114</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L723">index.ts:723</a></li>
 						</ul>
 					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="value" class="tsd-anchor"></a>
-					<h3>value</h3>
-					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <a href="point.html" class="tsd-signature-type" data-tsd-kind="Interface">Point</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L115">index.ts:115</a></li>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Pixel x,y coordinates and width/height into the parent <a href="../classes/enum.html#tileset">Enum.tileset</a></p>
+						</div>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
 						</ul>
-					</aside>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -177,9 +200,21 @@
 					<li class=" tsd-kind-interface">
 						<a href="enumfield.html" class="tsd-kind-icon">Enum<wbr>Field</a>
 					</li>
-					<li class=" tsd-kind-interface">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface">
 						<a href="enumvalue.html" class="tsd-kind-icon">Enum<wbr>Value</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="enumvalue.html#id" class="tsd-kind-icon">id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="enumvalue.html#tilesrcrect" class="tsd-kind-icon">tile<wbr>Src<wbr>Rect</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface">
 						<a href="filepatharrayfield.html" class="tsd-kind-icon">File<wbr>Path<wbr>Array<wbr>Field</a>
 					</li>
@@ -207,24 +242,9 @@
 					<li class=" tsd-kind-interface">
 						<a href="point.html" class="tsd-kind-icon">Point</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface">
+					<li class=" tsd-kind-interface">
 						<a href="pointarrayfield.html" class="tsd-kind-icon">Point<wbr>Array<wbr>Field</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="pointarrayfield.html#id" class="tsd-kind-icon">id</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="pointarrayfield.html#type" class="tsd-kind-icon">type</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="pointarrayfield.html#value" class="tsd-kind-icon">value</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface">
 						<a href="pointfield.html" class="tsd-kind-icon">Point<wbr>Field</a>
 					</li>
