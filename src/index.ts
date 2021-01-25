@@ -418,13 +418,13 @@ class Layer {
                 this.gridTiles_ = data.gridTiles;
             } break;
             case LayerType.IntGrid: {
-                this.intGrid_ = new Array(data.intGrid.length / this.size.height);
+                this.intGrid_ = new Array(this.size.width);
                 for (let i = 0; i < data.intGrid.length; ++i) {
                     const instance = data.intGrid[i];
                     const y = Math.floor(instance.coordId / this.size.width);
                     const x = instance.coordId - y * this.size.width;
                     if (this.intGrid_[x] == null) {
-                        this.intGrid_[x] = new Array(data.intGrid.length / this.size.width);
+                        this.intGrid_[x] = new Array(this.size.height);
                     }
                     this.intGrid_[x][y] = instance.v;
                 }
