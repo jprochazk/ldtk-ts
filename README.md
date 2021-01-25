@@ -15,7 +15,7 @@ $ npm install ldtk
 
 ### Usage
 
-**No preprocessing**
+**Basic usage**
 
 ```ts
 import { World } from "ldtk";

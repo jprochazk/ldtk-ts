@@ -6,11 +6,17 @@ export {
     LDtk
 }
 
+/**
+ * Represents a point in 2D space (X, Y)
+ */
 export interface Point {
     x: number,
     y: number
 }
 
+/**
+ * Represents a 2D size (width, height)
+ */
 export interface Size {
     width: number,
     height: number
@@ -198,6 +204,29 @@ function parseField(field: LDtk.FieldInstance, world: World, entityId: string): 
 }
 
 class Entity {
+    /**
+     * Map of entity fields.
+     * 
+     * They can be accessed like regular properties. 
+     * 
+     * Usage:
+     * ```
+     * import { FieldType } from "ldtk";
+     * 
+     * const entity = ... ;
+     * 
+     * for (const fieldName of Object.keys(entity.fields)) {
+     *     switch (entity.fields[fieldName]) {
+     *         case FieldType.Int: RenderUIEntityIntValue(entity.fields[fieldName])
+     *         // ...
+     *     }
+     * }
+     * ```
+     * 
+     * {@link Field}
+     * 
+     * {@link FieldType}
+     */
     readonly fields: Readonly<Record<string, Field>>;
 
     private tileset_: Tileset | undefined;
@@ -229,7 +258,11 @@ class Entity {
 
     }
 
-    /** Grid coordinates */
+    /** 
+     * Grid coordinates 
+     * 
+     * {@link Point}
+     */
     get gridPos(): Point {
         return {
             x: this.data.__grid[0],
@@ -242,7 +275,11 @@ class Entity {
         return this.data.__identifier;
     }
 
-    /** Pivot coordinates (values are from 0 to 1) of the Entity */
+    /** 
+     * Pivot coordinates (values are from 0 to 1) of the Entity 
+     * 
+     * {@link Point}
+     */
     get pivot(): Point {
         return {
             x: this.data.__pivot[0],
@@ -253,13 +290,17 @@ class Entity {
     /** 
      * Optional Tile used to display this entity (it could either be the default Entity tile, 
      * or some tile provided by a field value, like an Enum).
+     * 
+     * {@link LTdk.EntityInstanceTile}
      */
     get tile() {
         return this.data.__tile;
     }
 
     /**
-     * Optional Tileset used to display this etity
+     * Optional Tileset used to display this entity
+     * 
+     * {@link Tileset}
      */
     get tileset() {
         return this.tileset_;
@@ -267,6 +308,8 @@ class Entity {
 
     /** 
      * Pixel coordinates with all offsets applied
+     * 
+     * {@link Point}
      */
     get pos(): Point {
         return {
@@ -277,6 +320,8 @@ class Entity {
 
     /**
      * Pixel coordinates without applied offsets
+     * 
+     * {@link Point}
      */
     get relativePos(): Point {
         return {
@@ -286,6 +331,9 @@ class Entity {
     }
 }
 
+/**
+ * Represents a single `Tile` instance.
+ */
 interface Tile {
     /** 
      * "Flip bits", a 2-bits integer to represent the mirror transformations of the tile.
@@ -302,7 +350,14 @@ interface Tile {
     /** 
      * Pixel coordinates of the tile in the **layer**. 
      * 
-     * Don't forget optional layer offsets, if they exist! 
+     * World position of a tile:
+     * ```
+     * const layer = ...;
+     * for (tile in layer.tiles) {
+     *     const tileWorldX = tile.px[0] + layer.pxTotalOffset.x
+     *     const tileWorldY = tile.px[1] + layer.pxTotalOffset.y
+     * }
+     * ``` 
      */
     px: [x: number, y: number]
     /** Pixel coordinates of the tile in the **tileset** */
@@ -310,23 +365,39 @@ interface Tile {
     /** The *Tile ID* in the corresponding tileset. */
     t: number
 }
-interface IntGridValue {
-    /** Coordinate ID in the layer grid */
-    coordId: number
-    /** IntGrid value */
-    v: number
-}
+/**
+ * Enum of possible Layer types
+ * 
+ * {@link Layer}
+ */
 export const enum LayerType {
     AutoLayer = "AutoLayer",
     Entities = "Entities",
     IntGrid = "IntGrid",
     Tiles = "Tiles",
 }
+interface IntGridValueDef {
+    /** Color (RGB hex string) */
+    color: string
+    /** Unique string identifier */
+    id?: string
+}
 class Layer {
     private autoLayerTiles_: Tile[] | null = null;
     private entities_: Entity[] | null = null;
     private gridTiles_: Tile[] | null = null;
-    private intGrid_: IntGridValue[] | null = null;
+    private intGrid_: number[][] | null = null;
+
+    /**
+     * A map of IntGrid values to IntGrid value definitions.
+     * 
+     * The definition contains the editor color and optional identifier.
+     * 
+     * {@link IntGridValueDef}
+     * 
+     * This is only populated if {@link Layer.type} is `IntGrid`.
+     */
+    readonly intGridValues: Readonly<Record<number, IntGridValueDef>> = {};
 
     constructor(
         public readonly world: World,
@@ -337,7 +408,7 @@ class Layer {
                 this.autoLayerTiles_ = data.autoLayerTiles;
             } break;
             case LayerType.Entities: {
-                this.entities_ = [];
+                this.entities_ = new Array(data.entityInstances.length);
                 for (let i = 0; i < data.entityInstances.length; ++i) {
                     const instance = data.entityInstances[i];
                     this.entities_[i] = new Entity(world, instance, this.pxTotalOffset);
@@ -347,12 +418,40 @@ class Layer {
                 this.gridTiles_ = data.gridTiles;
             } break;
             case LayerType.IntGrid: {
-                this.intGrid_ = data.intGrid;
+                this.intGrid_ = new Array(data.intGrid.length / this.size.height);
+                for (let i = 0; i < data.intGrid.length; ++i) {
+                    const instance = data.intGrid[i];
+                    const y = Math.floor(instance.coordId / this.size.width);
+                    const x = instance.coordId - y * this.size.width;
+                    if (this.intGrid_[x] == null) {
+                        this.intGrid_[x] = new Array(data.intGrid.length / this.size.width);
+                    }
+                    this.intGrid_[x][y] = instance.v;
+                }
+                //@ts-ignore accessing private property
+                const worldData = world.data;
+                const layers = worldData.defs!.layers;
+                if (layers != null) {
+                    for (let i = 0; i < layers.length; ++i) {
+                        if (layers[i].uid === this.uid) {
+                            for (let idx = 0; idx < layers[i].intGridValues.length; ++idx) {
+                                (this.intGridValues as Record<number, IntGridValueDef>)[idx] = {
+                                    color: layers[i].intGridValues[idx].color,
+                                    id: layers[i].intGridValues[idx].identifier
+                                };
+                            }
+                        }
+                    }
+                }
             } break;
         }
     }
 
-    /** Grid-based width/height. */
+    /** 
+     * Grid-based width/height. 
+     * 
+     * {@link Size}
+     */
     get size(): Size {
         return {
             width: this.data.__cWid,
@@ -360,16 +459,25 @@ class Layer {
         };
     }
 
-    /** Size of a grid cell. */
+    /** 
+     * Size of a grid cell. 
+     * 
+     * Refers to both the width and height.
+     */
     get gridSize() {
         return this.data.__gridSize;
     }
 
+    /** Layer opacity */
     get opacity() {
         return this.data.__opacity;
     }
 
-    /** Total layer pixel offset, including both instance and definition offsets. */
+    /** 
+     * Total layer pixel offset, including both instance and definition offsets. 
+     * 
+     * {@link Point}
+     */
     get pxTotalOffset(): Point {
         return {
             x: this.data.__pxTotalOffsetX,
@@ -378,57 +486,120 @@ class Layer {
     }
 
     /** 
-     * Possible values: `AutoLayer`, `Entities`, `Tiles`, `IntGrid`
+     * Layer type, possible values: `AutoLayer`, `Entities`, `Tiles`, `IntGrid`
      * 
-     * @see LayerType
+     * {@link LayerType}
      */
     get type(): LayerType {
         return this.data.__type as LayerType;
     }
 
-    /** Non-null if `this.type === "AutoLayer"` */
+    /** 
+     * Non-null if `this.type === "AutoLayer"` 
+     * 
+     * {@link Layer.type}
+     * 
+     * {@link Tile}
+     */
     get autoLayerTiles(): readonly Tile[] | null {
         return this.autoLayerTiles_;
     }
 
-    /** Non-null if `this.type === "Entities"` */
+    /** 
+     * Non-null if `this.type === "Entities"` 
+     * 
+     * {@link Layer.type}
+     * 
+     * {@link Entity}
+     */
     get entities(): readonly Entity[] | null {
         return this.entities_;
     }
 
-    /** Non-null if `this.type === "Tiles"` */
+    /** 
+     * Non-null if `this.type === "Tiles"` 
+     * 
+     * {@link Layer.type}
+     * 
+     * {@link Tile}
+     */
     get gridTiles(): readonly Tile[] | null {
         return this.gridTiles_;
     }
 
-    /** Non-null if `this.type === "IntGrid"` */
-    get intGrid(): readonly IntGridValue[] | null {
+    /** 
+     * This contains the values from the IntGrid, but stored in a 2D array.
+     * 
+     * ```
+     * const layer: Layer = new Layer(...);
+     * const grid = layer.intGridXY;
+     * for (let x = 0; x < grid.length; ++x) {
+     *     for (let y = 0; y < grid[x].length; ++y) {
+     *         doSomethingWith(grid[x][y]);
+     *     }
+     * }
+     * ```
+     * 
+     * Non-null if `this.type === "IntGrid"` 
+     * 
+     * {@link Layer.type}
+     */
+    get intGrid(): readonly number[][] | null {
         return this.intGrid_;
     }
 
-    /** UID of the level this layer belongs to */
-    get levelUid(): number {
-        return this.data.levelId;
+    /** 
+     * Parent Level
+     * 
+     * {@link Level}
+     */
+    get level(): Level | undefined {
+        return this.world.findLevelByUid(this.data.levelId);
     }
 
-    /** Optional tileset used to render the layer */
+    /** 
+     * Optional tileset used to render the layer 
+     * 
+     * {@link Tileset}
+     */
     get tileset(): Tileset | undefined {
         if (this.data.__tilesetDefUid == null) return;
         return this.world.tilesetMap[this.data.__tilesetDefUid];
+    }
+
+    /** Unique Int identifier */
+    get uid(): number {
+        return this.data.layerDefUid;
     }
 }
 
 class Background {
     constructor(private data: LDtk.Level) { }
 
+    /**
+     * Background color (RGB hex string)
+     */
     get color() {
         return this.data.__bgColor;
     }
 
+    /**
+     * Positional information
+     * - Cropping
+     * - Scale
+     * - Top-Left corner
+     * 
+     * {@link LDtk.LevelBackgroundPosition}
+     */
     get pos() {
         return this.data.__bgPos;
     }
 
+    /**
+     * Background pivot point, values are in the range (0, 1)
+     * 
+     * {@link Point}
+     */
     get pivot(): Point {
         return {
             x: this.data.bgPivotX,
@@ -436,19 +607,31 @@ class Background {
         };
     }
 
+    /**
+     * Background image URL
+     */
     get path() {
         return this.data.bgRelPath;
     }
 }
+/**
+ * Contains the neighbour's direction relative to this level
+ * and a reference to the neighbour.
+ * 
+ * {@link Level}
+ */
 interface Neighbour {
     dir: "n" | "s" | "w" | "e"
     level: Level
 }
 class Level {
+    /**
+     * {@link Background}
+     */
     readonly background: Background;
 
     /** 
-     * An array containing all layer instances.
+     * An array layer instances.
      * 
      * This array is **sorted in display order**: the 1st layer is the top-most and the last is behind.
      */
@@ -486,7 +669,11 @@ class Level {
         return this.data.uid;
     }
 
-    /** World X/Y coordinates in pixels */
+    /**
+     * World X/Y coordinates in pixels 
+     * 
+     * {@link Point}
+     */
     get pos(): Point {
         return {
             x: this.data.worldX,
@@ -494,6 +681,13 @@ class Level {
         };
     }
 
+    /**
+     * Get neighbouring levels
+     * 
+     * This property is lazily loaded.
+     * 
+     * {@link Neighbour}
+     */
     get neighbours(): Neighbour[] {
         // lazily load neighbours
         // reason: attempting to find neighbours before
@@ -515,14 +709,35 @@ class Level {
     }
 }
 
+/**
+ * An Enum value
+ */
 interface EnumValue {
+    /**
+     * Unique string identifier
+     */
     id: string
-    tileId?: number
+    /**
+     * Pixel x,y coordinates and width/height into the parent {@link Enum.tileset}
+     */
     tileSrcRect: { x: number, y: number, width: number, height: number }
 }
 class Enum {
+    /**
+     * A map of Enum value ids to Enum values.
+     * 
+     * {@link EnumValue}
+     */
     readonly valueMap: Readonly<Record<string, EnumValue>>;
-    readonly valueKeys: string[];
+    /**
+     * Array of this Enum's value ids
+     */
+    readonly valueIds: string[];
+    /**
+     * Array of this Enum's values
+     * 
+     * {@link EnumValue}
+     */
     readonly values: EnumValue[];
 
     constructor(
@@ -534,7 +749,6 @@ class Enum {
             const v = data.values[i];
             (this.valueMap as Record<string, EnumValue>)[v.id] = {
                 id: v.id,
-                tileId: v.tileId,
                 tileSrcRect: {
                     x: v.__tileSrcRect[0],
                     y: v.__tileSrcRect[1],
@@ -543,7 +757,7 @@ class Enum {
                 }
             }
         }
-        this.valueKeys = Object.keys(this.valueMap);
+        this.valueIds = Object.keys(this.valueMap);
         this.values = Object.values(this.valueMap);
     }
 
@@ -555,7 +769,11 @@ class Enum {
     get uid(): number {
         return this.data.uid;
     }
-    /** Optional icon tileset */
+    /** 
+     * Optional icon tileset 
+     * 
+     * {@link Tileset}
+     */
     get tileset(): Tileset | undefined {
         if (this.data.iconTilesetUid == null) return;
         return this.world.tilesetMap[this.data.iconTilesetUid];
@@ -594,8 +812,7 @@ class Tileset {
     /** 
      * Size of one tile 
      * 
-     * This represents both width and height, because non-uniform tiles
-     * are not supported yet.
+     * This represents both width and height
      */
     get gridSize(): number {
         return this.data.tileGridSize;
@@ -607,16 +824,55 @@ class Tileset {
 }
 
 export class World {
+    /**
+     * A map of Level ids to Levels.
+     * 
+     * {@link Level}
+     */
     readonly levelMap: Readonly<Record<string, Level>>;
-    readonly levelKeys: string[];
+    /**
+     * Array Levels Ids defined for this World.
+     */
+    readonly levelIds: string[];
+    /**
+     * Array Levels defined for this World.
+     * 
+     * {@link Level}
+     */
     readonly levels: Level[];
 
+    /**
+     * A map of Tileset ids to Tilesets.
+     * 
+     * {@link Tileset}
+     */
     readonly tilesetMap: Readonly<Record<number, Tileset>>;
+    /**
+     * Array Tilesets Ids defined for this World.
+     */
     readonly tilesetIds: string[];
+    /**
+     * Array Tilesets defined for this World.
+     * 
+     * {@link Tileset}
+     */
     readonly tilesets: Tileset[];
 
+    /**
+     * A map of Enum ids to Enums.
+     * 
+     * {@link Enum}
+     */
     readonly enumMap: Readonly<Record<string, Enum>>;
-    readonly enumKeys: string[];
+    /**
+     * Array Enum names defined for this World.
+     */
+    readonly enumIds: string[];
+    /**
+     * Array Enums defined for this World.
+     * 
+     * See {@link Enum}
+     */
     readonly enums: Enum[];
 
     private constructor(private data: LDtk.World) {
@@ -624,13 +880,13 @@ export class World {
         this.tilesetIds = [];
         this.tilesets = [];
         this.enumMap = {};
-        this.enumKeys = [];
+        this.enumIds = [];
         this.enums = [];
         if (data.defs != null) {
             // load tilesets
             for (let i = 0; i < data.defs.tilesets.length; ++i) {
                 const t = data.defs.tilesets[i];
-                (this.tilesetMap as Record<string, Tileset>)[t.uid] = new Tileset(this, t);
+                (this.tilesetMap as Record<string, Tileset>)[t.identifier] = new Tileset(this, t);
             }
             this.tilesetIds = Object.keys(this.tilesetMap);
             this.tilesets = Object.values(this.tilesetMap);
@@ -639,60 +895,108 @@ export class World {
                 const e = data.defs.enums[i];
                 (this.enumMap as Record<string, Enum>)[e.identifier] = new Enum(this, e);
             }
-            this.enumKeys = Object.keys(this.enumMap);
+            this.enumIds = Object.keys(this.enumMap);
             this.enums = Object.values(this.enumMap);
         }
 
         this.levelMap = {};
-        this.levelKeys = [];
+        this.levelIds = [];
         this.levels = [];
         if (!data.externalLevels) {
             // load levels if we don't have separate level files
             for (let i = 0; i < data.levels.length; ++i) {
                 (this.levelMap as Record<string, Level>)[data.levels[i].identifier] = new Level(this, data.levels[i]);
             }
-            this.levelKeys = Object.keys(this.levelMap);
+            this.levelIds = Object.keys(this.levelMap);
             this.levels = Object.values(this.levelMap);
         }
     }
 
+    /**
+     * Find a level for which a given `predicate` is true.
+     * 
+     * {@link Level}
+     */
     findLevel(predicate: (l: Level) => boolean): Level | undefined {
         for (let i = 0; i < this.levels.length; ++i) {
             if (predicate(this.levels[i])) return this.levels[i];
         }
     }
+    /**
+     * Find a tileset for which a given `predicate` is true.
+     * 
+     * {@link Tileset}
+     */
     findTileset(predicate: (t: Tileset) => boolean): Tileset | undefined {
         for (let i = 0; i < this.tilesets.length; ++i) {
             if (predicate(this.tilesets[i])) return this.tilesets[i];
         }
     }
+    /**
+     * Find an enum for which a given `predicate` is true.
+     * 
+     * {@link Enum}
+     */
     findEnum(predicate: (e: Enum) => boolean): Enum | undefined {
         for (let i = 0; i < this.enums.length; ++i) {
             if (predicate(this.enums[i])) return this.enums[i];
         }
     }
 
+    /**
+     * Find a level by its `uid`.
+     * 
+     * {@link Level}
+     */
     findLevelByUid(uid: number): Level | undefined {
         return this.findLevel(l => l.uid === uid);
     }
-    findTilesetById(id: string): Tileset | undefined {
-        return this.findTileset(t => t.id === id);
+    /**
+     * Find a tileset by its `uid`.
+     * 
+     * {@link Tileset}
+     */
+    findTilesetByUid(uid: number): Tileset | undefined {
+        return this.findTileset(t => t.uid === uid);
     }
+    /**
+     * Find a tileset by its `path`.
+     * 
+     * {@link Tileset}
+     */
     findTilesetByPath(path: string): Tileset | undefined {
         return this.findTileset(t => t.path === path);
     }
+    /**
+     * Find an enum by its `uid`.
+     * 
+     * {@link Enum}
+     */
     findEnumByUid(uid: number): Enum | undefined {
         return this.findEnum(e => e.uid === uid);
     }
 
+    /**
+     * True if this world was saved with `separate level files` option.
+     */
     get externalLevels(): boolean {
         return this.data.externalLevels;
     }
 
+    /**
+     * Background color (RGB hex string)
+     */
     get bgColor(): string {
         return this.data.bgColor;
     }
 
+    /**
+     * The world layout
+     * 
+     * Possible values: "Free", "GridVania", "LinearHorizontal", "LinearVertical" 
+     * 
+     * {@link LDtk.WorldLayout}
+     */
     get layout() {
         return this.data.worldLayout;
     }
@@ -719,7 +1023,7 @@ export class World {
             if (rel != null) {
                 promises.push(this.fetchLevel(rel).then(loaded => {
                     (this.levelMap as Record<string, Level>)[loaded.id] = loaded;
-                    (this.levelKeys as string[])[i] = loaded.id;
+                    (this.levelIds as string[])[i] = loaded.id;
                     (this.levels as Level[])[i] = loaded;
                 }));
             }
@@ -754,26 +1058,8 @@ export class World {
         if (level == null) throw new Error(`Level ${identifier} does not exist!`);
         const loaded = await this.fetchLevel(level.externalRelPath!);
         (this.levelMap as Record<string, Level>)[loaded.id] = loaded;
-        (this.levelKeys as string[])[levelIndex] = loaded.id;
+        (this.levelIds as string[])[levelIndex] = loaded.id;
         (this.levels as Level[])[levelIndex] = loaded;
-    }
-
-    /**
-     * Unload a single level.
-     * 
-     * This only works if you're not holding any strong references
-     * to the level somewhere.
-     */
-    unloadLevel(identifier: string) {
-        for (let i = 0; i < this.levelKeys.length; ++i) {
-            const key = this.levelKeys[i];
-            if (key === identifier) {
-                delete (this.levelMap as Record<string, Level>)[key];
-                delete this.levels[i];
-                delete this.levelKeys[i];
-                break;
-            }
-        }
     }
 
     /**

@@ -1,4 +1,7 @@
-// This file contains the raw TS types
+/**
+ * @packageDocumentation
+ * This file contains LDtk file format types mapped 1:1 to TypeScript types.
+ */
 
 /**
  * This is the root of any Project JSON file. 
@@ -52,7 +55,7 @@ export interface World {
      * 
      * Possible values: "Free", "GridVania", "LinearHorizontal", "LinearVertical" 
      */
-    worldLayout?: WorldLayout
+    worldLayout: WorldLayout
 }
 /** 
  * A interface containing all the definitions of this project If you're writing your own LDtk importer, 
