@@ -1,11 +1,13 @@
 # ldtk-ts
 
-LDtk file format type definitions, and import wrapper. 
+LDtk 0.7.0 file format type definitions and import wrapper.
 
-It provides an API without all the noise of LDtk "editor-only" values, definitions, etc.,
-combined with many utilities to make using the format easier.
+This library provides an API without all the noise of LDtk "editor-only" values, 
+definitions, etc., combined with many utilities to make usage easier.
 
-It's also possible to work with the raw JSON file without any preprocessing.
+If you just want the type definitions, they're fully compliant with the [schema](https://ldtk.io/files/JSON_SCHEMA.json).
+
+Documentation is available [here](https://www.jan-prochazka.eu/ldtk-ts).
 
 ```s 
 $ npm install ldtk
