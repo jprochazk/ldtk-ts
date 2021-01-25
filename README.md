@@ -1,10 +1,34 @@
 # ldtk-ts
 
-LDtk file format type definitions, and import wrapper providing an API without all the noise of LDtk "editor-only" values, definitions, etc. It's also possible to use the type definitions only, and work with the raw JSON file.
+LDtk file format type definitions, and import wrapper. 
+
+It provides an API without all the noise of LDtk "editor-only" values, definitions, etc.,
+combined with many utilities to make using the format easier.
+
+It's also possible to work with the raw JSON file without any preprocessing.
+
+```s 
+$ npm install ldtk
+```
 
 ### Usage
 
-**Using the import wrapper**
+**No preprocessing**
+
+```ts
+import { World } from "ldtk";
+
+World.loadRaw("assets/world.ldtk").then(async world => {
+    // You have access to the raw `LDtk` JSON file here
+    let currentLevel = world.levels[0];
+    for (const layer of currentLevel.layerInstances) {
+        console.log(layer);
+        // the world is your oyster
+    }
+})
+```
+
+**Using the importer**
 
 ```ts
 import { World, LDtk } from "ldtk";
@@ -19,6 +43,3 @@ World.fromURL("assets/world.ldtk").then(async world => {
     window.requestAnimationFrame(loop)
 });
 ```
-
-There is a lot more to the API. Full documentation is currently unavailable, but everything inside
-the source files is thoroughly commented.
