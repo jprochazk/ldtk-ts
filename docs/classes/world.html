@@ -65,6 +65,21 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Worlds contains various definitions (<a href="../enums/fieldtype.html#enum">Enum</a>, <a href="tileset.html">Tileset</a>) and
+						are made up of one or more <a href="level.html">Level</a>s, which utilise these definitions.</p>
+					</div>
+					<p>Worlds can have different layouts: <code>Linear</code>, <code>Free</code>, or <code>GridVania</code>.</p>
+					<p>Linear worlds are organized as a linear sequence of levels, either
+					horizontal or vertical.</p>
+					<p>Free worlds are not organized, all levels appear freely in 2D space.</p>
+					<p>GridVania worlds are organized into a uniform 2D grid, where each level
+					can take up one or more grid cells.</p>
+					<p>Visit <a href="https://ldtk.io/docs/general/world/">https://ldtk.io/docs/general/world/</a> for more information.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -138,7 +153,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L876">index.ts:876</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L982">index.ts:982</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -160,7 +175,7 @@
 					<div class="tsd-signature tsd-kind-icon">enum<wbr>Ids<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L870">index.ts:870</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L978">index.ts:978</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -175,14 +190,13 @@
 					<div class="tsd-signature tsd-kind-icon">enum<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="enum.html" class="tsd-signature-type" data-tsd-kind="Class">Enum</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L866">index.ts:866</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L974">index.ts:974</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>A map of Enum ids to Enums.</p>
 						</div>
-						<p><a href="../enums/fieldtype.html#enum">Enum</a></p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
@@ -191,14 +205,13 @@
 					<div class="tsd-signature tsd-kind-icon">enums<span class="tsd-signature-symbol">:</span> <a href="enum.html" class="tsd-signature-type" data-tsd-kind="Class">Enum</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L876">index.ts:876</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L982">index.ts:982</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Array Enums defined for this World.</p>
 						</div>
-						<p>See <a href="../enums/fieldtype.html#enum">Enum</a></p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
@@ -207,7 +220,7 @@
 					<div class="tsd-signature tsd-kind-icon">level<wbr>Ids<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L836">index.ts:836</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L952">index.ts:952</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -222,14 +235,13 @@
 					<div class="tsd-signature tsd-kind-icon">level<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="level.html" class="tsd-signature-type" data-tsd-kind="Class">Level</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L832">index.ts:832</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L948">index.ts:948</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>A map of Level ids to Levels.</p>
 						</div>
-						<p><a href="level.html">Level</a></p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
@@ -238,14 +250,13 @@
 					<div class="tsd-signature tsd-kind-icon">levels<span class="tsd-signature-symbol">:</span> <a href="level.html" class="tsd-signature-type" data-tsd-kind="Class">Level</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L842">index.ts:842</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L956">index.ts:956</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Array Levels defined for this World.</p>
 						</div>
-						<p><a href="level.html">Level</a></p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
@@ -254,7 +265,7 @@
 					<div class="tsd-signature tsd-kind-icon">tileset<wbr>Ids<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L853">index.ts:853</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L965">index.ts:965</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -269,14 +280,13 @@
 					<div class="tsd-signature tsd-kind-icon">tileset<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><a href="tileset.html" class="tsd-signature-type" data-tsd-kind="Class">Tileset</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L849">index.ts:849</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L961">index.ts:961</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>A map of Tileset ids to Tilesets.</p>
 						</div>
-						<p><a href="tileset.html">Tileset</a></p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
@@ -285,14 +295,13 @@
 					<div class="tsd-signature tsd-kind-icon">tilesets<span class="tsd-signature-symbol">:</span> <a href="tileset.html" class="tsd-signature-type" data-tsd-kind="Class">Tileset</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L859">index.ts:859</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L969">index.ts:969</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Array Tilesets defined for this World.</p>
 						</div>
-						<p><a href="tileset.html">Tileset</a></p>
 					</div>
 				</section>
 			</section>
@@ -308,7 +317,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L989">index.ts:989</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1081">index.ts:1081</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -330,7 +339,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L982">index.ts:982</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1074">index.ts:1074</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -352,7 +361,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L1000">index.ts:1000</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1090">index.ts:1090</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -360,7 +369,6 @@
 									<p>The world layout</p>
 								</div>
 								<p>Possible values: &quot;Free&quot;, &quot;GridVania&quot;, &quot;LinearHorizontal&quot;, &quot;LinearVertical&quot;</p>
-								<p><a href="../enums/ldtk.worldlayout.html">LDtk.WorldLayout</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../enums/ldtk.worldlayout.html" class="tsd-signature-type" data-tsd-kind="Enumeration">WorldLayout</a></h4>
 						</li>
@@ -379,9 +387,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L1080">index.ts:1080</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1177">index.ts:1177</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Used for fetching external levels</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -402,14 +415,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L940">index.ts:940</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1040">index.ts:1040</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Find an enum for which a given <code>predicate</code> is true.</p>
 								</div>
-								<p><a href="../enums/fieldtype.html#enum">Enum</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -449,14 +461,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L975">index.ts:975</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1067">index.ts:1067</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Find an enum by its <code>uid</code>.</p>
 								</div>
-								<p><a href="../enums/fieldtype.html#enum">Enum</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -478,14 +489,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L920">index.ts:920</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1024">index.ts:1024</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Find a level for which a given <code>predicate</code> is true.</p>
 								</div>
-								<p><a href="level.html">Level</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -525,14 +535,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L951">index.ts:951</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1049">index.ts:1049</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Find a level by its <code>uid</code>.</p>
 								</div>
-								<p><a href="level.html">Level</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -554,14 +563,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L930">index.ts:930</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1032">index.ts:1032</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Find a tileset for which a given <code>predicate</code> is true.</p>
 								</div>
-								<p><a href="tileset.html">Tileset</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -601,14 +609,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L967">index.ts:967</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1061">index.ts:1061</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Find a tileset by its <code>path</code>.</p>
 								</div>
-								<p><a href="tileset.html">Tileset</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -630,14 +637,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L959">index.ts:959</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1055">index.ts:1055</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Find a tileset by its <code>uid</code>.</p>
 								</div>
-								<p><a href="tileset.html">Tileset</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -659,7 +665,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L1043">index.ts:1043</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1134">index.ts:1134</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -689,7 +695,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L1009">index.ts:1009</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1099">index.ts:1099</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -712,7 +718,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L1068">index.ts:1068</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1162">index.ts:1162</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -740,7 +746,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L1076">index.ts:1076</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1170">index.ts:1170</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -768,7 +774,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L1104">index.ts:1104</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L1201">index.ts:1201</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -776,18 +782,18 @@
 									<p>Load the raw JSON without any utilities.</p>
 								</div>
 								<p>This does the following in Node:</p>
-								<pre><code><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">PATH</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;assets/world.ldtk&quot;</span><span style="color: #000000">;</span>
+								<pre><code><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">path</span><span style="color: #000000"> = ... ;</span>
 <span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #0000FF">*</span><span style="color: #000000"> </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #001080">fs</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;fs&quot;</span><span style="color: #000000">;</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">world</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">Promise</span><span style="color: #000000">((</span><span style="color: #001080">resolve</span><span style="color: #000000">, </span><span style="color: #001080">reject</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">readFile</span><span style="color: #000000">(</span><span style="color: #0070C1">PATH</span><span style="color: #000000">, { </span><span style="color: #001080">encoding:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;utf-8&quot;</span><span style="color: #000000"> }, (</span><span style="color: #001080">err</span><span style="color: #000000">, </span><span style="color: #001080">data</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">fs</span><span style="color: #000000">.</span><span style="color: #795E26">readFile</span><span style="color: #000000">(</span><span style="color: #001080">path</span><span style="color: #000000">, { </span><span style="color: #001080">encoding:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;utf-8&quot;</span><span style="color: #000000"> }, (</span><span style="color: #001080">err</span><span style="color: #000000">, </span><span style="color: #001080">data</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">         </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">err</span><span style="color: #000000">) </span><span style="color: #795E26">reject</span><span style="color: #000000">(</span><span style="color: #001080">err</span><span style="color: #000000">);</span>
 <span style="color: #000000">         </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #795E26">resolve</span><span style="color: #000000">(</span><span style="color: #267F99">JSON</span><span style="color: #000000">.</span><span style="color: #795E26">parse</span><span style="color: #000000">(</span><span style="color: #001080">data</span><span style="color: #000000">) </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #267F99">LDtk</span><span style="color: #000000">.</span><span style="color: #267F99">World</span><span style="color: #000000">);</span>
 <span style="color: #000000">    });</span>
 <span style="color: #000000">})</span>
 </code></pre>
 								<p>And in the browser:</p>
-								<pre><code><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">PATH</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;assets/world.ldtk&quot;</span><span style="color: #000000">;</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">world</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #795E26">fetch</span><span style="color: #000000">(</span><span style="color: #0070C1">PATH</span><span style="color: #000000">)).</span><span style="color: #795E26">json</span><span style="color: #000000">() </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #267F99">LDtk</span><span style="color: #000000">.</span><span style="color: #267F99">World</span><span style="color: #000000">;</span>
+								<pre><code><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">path</span><span style="color: #000000"> = ... ;</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">world</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> (</span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #795E26">fetch</span><span style="color: #000000">(</span><span style="color: #001080">path</span><span style="color: #000000">)).</span><span style="color: #795E26">json</span><span style="color: #000000">() </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #267F99">LDtk</span><span style="color: #000000">.</span><span style="color: #267F99">World</span><span style="color: #000000">;</span>
 </code></pre>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>

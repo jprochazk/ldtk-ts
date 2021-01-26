@@ -65,6 +65,18 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Entities are generic data that can be placed in your levels,
+						such as the Player start position or Items to pick up.</p>
+					</div>
+					<p>Entities are collections of custom fields.</p>
+					<p>Each field has a <code>type</code> and <code>value</code>.</p>
+					<p>The possible types can be found in <a href="../enums/fieldtype.html">FieldType</a>.</p>
+					<p>Visit <a href="https://ldtk.io/docs/general/editor-components/entities/">https://ldtk.io/docs/general/editor-components/entities/</a> for more information.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -118,7 +130,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L232">index.ts:232</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L351">index.ts:351</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -146,7 +158,7 @@
 					<div class="tsd-signature tsd-kind-icon">fields<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="../index.html#field" class="tsd-signature-type" data-tsd-kind="Type alias">Field</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L230">index.ts:230</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L349">index.ts:349</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -154,20 +166,32 @@
 							<p>Map of entity fields.</p>
 						</div>
 						<p>They can be accessed like regular properties.</p>
+						<p>For a full list of field types, see <a href="../enums/fieldtype.html">FieldType</a>.
+						All possible interfaces are under the <a href="../index.html#field">Field</a> union.</p>
 						<p>Usage:</p>
 						<pre><code><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">FieldType</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;ldtk&quot;</span><span style="color: #000000">;</span>
 
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">entity</span><span style="color: #000000"> = ... ;</span>
 
-<span style="color: #AF00DB">for</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">fieldName</span><span style="color: #000000"> </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #267F99">Object</span><span style="color: #000000">.</span><span style="color: #795E26">keys</span><span style="color: #000000">(</span><span style="color: #001080">entity</span><span style="color: #000000">.</span><span style="color: #001080">fields</span><span style="color: #000000">)) {</span>
-<span style="color: #000000">    </span><span style="color: #AF00DB">switch</span><span style="color: #000000"> (</span><span style="color: #001080">entity</span><span style="color: #000000">.</span><span style="color: #001080">fields</span><span style="color: #000000">[</span><span style="color: #001080">fieldName</span><span style="color: #000000">]) {</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">case</span><span style="color: #000000"> </span><span style="color: #001080">FieldType</span><span style="color: #000000">.</span><span style="color: #001080">Int</span><span style="color: #000000">: </span><span style="color: #795E26">RenderUIEntityIntValue</span><span style="color: #000000">(</span><span style="color: #001080">entity</span><span style="color: #000000">.</span><span style="color: #001080">fields</span><span style="color: #000000">[</span><span style="color: #001080">fieldName</span><span style="color: #000000">])</span>
-<span style="color: #000000">        </span><span style="color: #008000">// ...</span>
+<span style="color: #AF00DB">for</span><span style="color: #000000"> (</span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">field</span><span style="color: #000000"> </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #267F99">Object</span><span style="color: #000000">.</span><span style="color: #795E26">values</span><span style="color: #000000">(</span><span style="color: #001080">entity</span><span style="color: #000000">.</span><span style="color: #001080">fields</span><span style="color: #000000">)) {</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">switch</span><span style="color: #000000"> (</span><span style="color: #001080">field</span><span style="color: #000000">.</span><span style="color: #001080">type</span><span style="color: #000000">) {</span>
+<span style="color: #000000">        </span><span style="color: #008000">// thanks to the type system, `field` has type `IntField`</span>
+<span style="color: #000000">        </span><span style="color: #008000">// after you check that it&#039;s type is `FieldType.Int`.</span>
+<span style="color: #000000">        </span><span style="color: #008000">// value will have the type `number | null`.</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">case</span><span style="color: #000000"> </span><span style="color: #001080">FieldType</span><span style="color: #000000">.</span><span style="color: #001080">Int</span><span style="color: #000000">: </span><span style="color: #795E26">UseEntityIntValue</span><span style="color: #000000">(</span><span style="color: #001080">field</span><span style="color: #000000">.</span><span style="color: #001080">value</span><span style="color: #000000">); </span><span style="color: #AF00DB">break</span><span style="color: #000000">;</span>
+<span style="color: #000000">        </span><span style="color: #008000">// same goes for any other field type:</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">case</span><span style="color: #000000"> </span><span style="color: #001080">FieldType</span><span style="color: #000000">.</span><span style="color: #001080">Float</span><span style="color: #000000">: </span><span style="color: #795E26">UseEntityFloatValue</span><span style="color: #000000">(</span><span style="color: #001080">field</span><span style="color: #000000">.</span><span style="color: #001080">value</span><span style="color: #000000">); </span><span style="color: #AF00DB">break</span><span style="color: #000000">;</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">case</span><span style="color: #000000"> </span><span style="color: #001080">FieldType</span><span style="color: #000000">.</span><span style="color: #001080">String</span><span style="color: #000000">: </span><span style="color: #795E26">UseEntityTextValue</span><span style="color: #000000">(</span><span style="color: #001080">field</span><span style="color: #000000">.</span><span style="color: #001080">value</span><span style="color: #000000">); </span><span style="color: #AF00DB">break</span><span style="color: #000000">;</span>
+<span style="color: #000000">        </span><span style="color: #008000">// enum types have an extra field, `ref`, which holds</span>
+<span style="color: #000000">        </span><span style="color: #008000">// a reference to the parent enum.</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">case</span><span style="color: #000000"> </span><span style="color: #001080">FieldType</span><span style="color: #000000">.</span><span style="color: #001080">Enum</span><span style="color: #000000">: </span><span style="color: #795E26">UseEntityEnumValue</span><span style="color: #000000">(</span><span style="color: #001080">field</span><span style="color: #000000">.</span><span style="color: #001080">value</span><span style="color: #000000">, </span><span style="color: #001080">field</span><span style="color: #000000">.</span><span style="color: #001080">ref</span><span style="color: #000000">); </span><span style="color: #AF00DB">break</span><span style="color: #000000">;</span>
+<span style="color: #000000">        </span><span style="color: #008000">// array fields have separate entries in `FieldType`:</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">case</span><span style="color: #000000"> </span><span style="color: #001080">FieldType</span><span style="color: #000000">.</span><span style="color: #001080">IntArray</span><span style="color: #000000">:</span>
+<span style="color: #000000">            </span><span style="color: #008000">// field.value type is `number[]`</span>
+<span style="color: #000000">            </span><span style="color: #795E26">UseEntityIntArrayValue</span><span style="color: #000000">(</span><span style="color: #001080">field</span><span style="color: #000000">.</span><span style="color: #001080">value</span><span style="color: #000000">); </span><span style="color: #AF00DB">break</span><span style="color: #000000">;</span>
 <span style="color: #000000">    }</span>
 <span style="color: #000000">}</span>
 </code></pre>
-						<p><a href="../index.html#field">Field</a></p>
-						<p><a href="../enums/fieldtype.html">FieldType</a></p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
@@ -176,7 +200,7 @@
 					<div class="tsd-signature tsd-kind-icon">tileset_<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="tileset.html" class="tsd-signature-type" data-tsd-kind="Class">Tileset</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L232">index.ts:232</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L351">index.ts:351</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -200,14 +224,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L266">index.ts:266</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L383">index.ts:383</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Grid coordinates</p>
 								</div>
-								<p><a href="../interfaces/point.html">Point</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/point.html" class="tsd-signature-type" data-tsd-kind="Interface">Point</a></h4>
 						</li>
@@ -223,7 +246,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L274">index.ts:274</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L391">index.ts:391</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -245,14 +268,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L283">index.ts:283</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L398">index.ts:398</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Pivot coordinates (values are from 0 to 1) of the Entity</p>
 								</div>
-								<p><a href="../interfaces/point.html">Point</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/point.html" class="tsd-signature-type" data-tsd-kind="Interface">Point</a></h4>
 						</li>
@@ -268,14 +290,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L314">index.ts:314</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L423">index.ts:423</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Pixel coordinates with all offsets applied</p>
 								</div>
-								<p><a href="../interfaces/point.html">Point</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/point.html" class="tsd-signature-type" data-tsd-kind="Interface">Point</a></h4>
 						</li>
@@ -291,14 +312,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L326">index.ts:326</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L433">index.ts:433</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Pixel coordinates without applied offsets</p>
 								</div>
-								<p><a href="../interfaces/point.html">Point</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/point.html" class="tsd-signature-type" data-tsd-kind="Interface">Point</a></h4>
 						</li>
@@ -314,7 +334,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L296">index.ts:296</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L409">index.ts:409</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -322,7 +342,6 @@
 									<p>Optional Tile used to display this entity (it could either be the default Entity tile,
 									or some tile provided by a field value, like an Enum).</p>
 								</div>
-								<p>{@link LTdk.EntityInstanceTile}</p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/ldtk.entityinstancetile.html" class="tsd-signature-type" data-tsd-kind="Interface">EntityInstanceTile</a></h4>
 						</li>
@@ -338,14 +357,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L305">index.ts:305</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L416">index.ts:416</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Optional Tileset used to display this entity</p>
 								</div>
-								<p><a href="tileset.html">Tileset</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="tileset.html" class="tsd-signature-type" data-tsd-kind="Class">Tileset</a></h4>
 						</li>

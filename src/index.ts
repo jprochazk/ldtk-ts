@@ -26,21 +26,101 @@ export interface Size {
 // TODO: auto-generate documentation https://den.dev/blog/docs-github-actions/#typescript-documentation-generator
 
 export const enum FieldType {
+    /**
+     * Value type: `number | null`
+     * 
+     * Associated interface: {@link IntField}
+     */
     Int = "Int",
+    /**
+     * Value type: `number[]`
+     * 
+     * Associated interface: {@link IntArrayField}
+     */
     IntArray = "IntArray",
+    /**
+     * Value type: `number | null`
+     * 
+     * Associated interface: {@link Float}
+     */
     Float = "Float",
+    /**
+     * Value type: `number[]`
+     * 
+     * Associated interface: {@link FloatArrayField}
+     */
     FloatArray = "FloatArray",
+    /**
+     * Value type: `string`
+     * 
+     * Associated interface: {@link StringField}
+     */
     String = "String",
+    /**
+     * Value type: `string[]`
+     * 
+     * Associated interface: {@link StringArrayField}
+     */
     StringArray = "StringArray",
+    /**
+     * Value type: `number`
+     * 
+     * Associated interface: {@link BoolField}
+     */
     Bool = "Bool",
+    /**
+     * Value type: `number[]`
+     * 
+     * Associated interface: {@link BoolArrayField}
+     */
     BoolArray = "BoolArray",
+    /**
+     * Value type: `string`
+     * 
+     * Associated interface: {@link ColorField}
+     */
     Color = "Color",
+    /**
+     * Value type: `string[]`
+     * 
+     * Associated interface: {@link ColorArrayField}
+     */
     ColorArray = "ColorArray",
+    /**
+     * Value type: `number`
+     * 
+     * Associated interface: {@link PointField}
+     */
     Point = "Point",
+    /**
+     * Value type: `number[]`
+     * 
+     * Associated interface: {@link PointArrayField}
+     */
     PointArray = "PointArray",
+    /**
+     * Value type: `string`
+     * 
+     * Associated interface: {@link FilePathField}
+     */
     FilePath = "FilePath",
+    /**
+     * Value type: `string[]`
+     * 
+     * Associated interface: {@link FilePathField}
+     */
     FilePathArray = "FilePathArray",
+    /**
+     * Value type: `string`
+     * 
+     * Associated interface: {@link EnumField}
+     */
     Enum = "Enum",
+    /**
+     * Value type: `string[]`
+     * 
+     * Associated interface: {@link EnumArrayField}
+     */
     EnumArray = "EnumArray",
 }
 export interface IntField {
@@ -78,6 +158,7 @@ export interface FilePathField {
     type: FieldType.FilePath
     value: string | null
 }
+/** Enum fields contain a reference to the associated {@link Enum} */
 export interface EnumField {
     id: string,
     type: FieldType.Enum
@@ -119,11 +200,11 @@ export interface FilePathArrayField {
     type: FieldType.FilePathArray
     value: string[]
 }
+/** Enum fields contain a reference to the associated {@link Enum} */
 export interface EnumArrayField {
     id: string,
     type: FieldType.EnumArray
     value: string[]
-    /** Reference to the enum */
     ref: Enum
 }
 
@@ -141,6 +222,17 @@ export interface EnumArrayField {
  * ```
  * const entity = layer.entities[0];
  * entity.fields["enum_field"].ref.uid // you can access the enum properties
+ * ```
+ * 
+ * Having all the field interfaces in a union allows narrowing a generic
+ * field type down to a specific field type:
+ * 
+ * ```
+ * const field: Field = // ...
+ * if (field.type === FieldType.Int) {
+ *     // value has type `number | null`
+ *     const value = field.value; 
+ * }
  * ```
  */
 export type Field =
@@ -179,35 +271,54 @@ function parseField(field: LDtk.FieldInstance, world: World, entityId: string): 
     const id = field.__identifier;
 
     // transform the type to fit our own definition
-    // e.g. Array<T> -> TArray
+    // e.g. Array<Type> -> TypeArray
     /** @see {FieldType} */
     let type = result[2] as any;
     const typeName = type;
+    // all enum types are widened to just `Enum`
     if (isEnum) type = "Enum";
     if (isArray) type += "Array";
 
     // grab the field value
     let value = field.__value;
+    // if the type is `Point`, transform each value into a point
     if (value != null && type === FieldType.Point)
-        value = { x: (value as any)[0], y: (value as any)[1] };
+        value = { x: (value as any).cx, y: (value as any).cy };
+    // if it's a point array, transform each array value to a point
     if (type === FieldType.PointArray)
-        (value as [number, number][]).map(v => ({ x: v[0], y: v[1] }));
+        value = (value as any[]).map(v => ({ x: v.cx, y: v.cy }));
 
     const output = {
         id,
         type,
         value
     } as any;
+    // if the type is `Enum`, additionally append a reference to the enum
     if (isEnum) output.ref = world.enumMap[typeName];
 
     return output;
 }
 
+/**
+ * Entities are generic data that can be placed in your levels, 
+ * such as the Player start position or Items to pick up.
+ * 
+ * Entities are collections of custom fields.
+ * 
+ * Each field has a `type` and `value`.
+ * 
+ * The possible types can be found in {@link FieldType}.
+ * 
+ * Visit https://ldtk.io/docs/general/editor-components/entities/ for more information.
+ */
 export class Entity {
     /**
      * Map of entity fields.
      * 
      * They can be accessed like regular properties. 
+     * 
+     * For a full list of field types, see {@link FieldType}.
+     * All possible interfaces are under the {@link Field} union.
      * 
      * Usage:
      * ```
@@ -215,17 +326,25 @@ export class Entity {
      * 
      * const entity = ... ;
      * 
-     * for (const fieldName of Object.keys(entity.fields)) {
-     *     switch (entity.fields[fieldName]) {
-     *         case FieldType.Int: RenderUIEntityIntValue(entity.fields[fieldName])
-     *         // ...
+     * for (const field of Object.values(entity.fields)) {
+     *     switch (field.type) {
+     *         // thanks to the type system, `field` has type `IntField`
+     *         // after you check that it's type is `FieldType.Int`.
+     *         // value will have the type `number | null`.
+     *         case FieldType.Int: UseEntityIntValue(field.value); break;
+     *         // same goes for any other field type:
+     *         case FieldType.Float: UseEntityFloatValue(field.value); break;
+     *         case FieldType.String: UseEntityTextValue(field.value); break;
+     *         // enum types have an extra field, `ref`, which holds
+     *         // a reference to the parent enum.
+     *         case FieldType.Enum: UseEntityEnumValue(field.value, field.ref); break;
+     *         // array fields have separate entries in `FieldType`:
+     *         case FieldType.IntArray: 
+     *             // field.value type is `number[]`
+     *             UseEntityIntArrayValue(field.value); break;
      *     }
      * }
      * ```
-     * 
-     * {@link Field}
-     * 
-     * {@link FieldType}
      */
     readonly fields: Readonly<Record<string, Field>>;
 
@@ -260,8 +379,6 @@ export class Entity {
 
     /** 
      * Grid coordinates 
-     * 
-     * {@link Point}
      */
     get gridPos(): Point {
         return {
@@ -277,8 +394,6 @@ export class Entity {
 
     /** 
      * Pivot coordinates (values are from 0 to 1) of the Entity 
-     * 
-     * {@link Point}
      */
     get pivot(): Point {
         return {
@@ -290,8 +405,6 @@ export class Entity {
     /** 
      * Optional Tile used to display this entity (it could either be the default Entity tile, 
      * or some tile provided by a field value, like an Enum).
-     * 
-     * {@link LTdk.EntityInstanceTile}
      */
     get tile() {
         return this.data.__tile;
@@ -299,8 +412,6 @@ export class Entity {
 
     /**
      * Optional Tileset used to display this entity
-     * 
-     * {@link Tileset}
      */
     get tileset() {
         return this.tileset_;
@@ -308,8 +419,6 @@ export class Entity {
 
     /** 
      * Pixel coordinates with all offsets applied
-     * 
-     * {@link Point}
      */
     get pos(): Point {
         return {
@@ -320,8 +429,6 @@ export class Entity {
 
     /**
      * Pixel coordinates without applied offsets
-     * 
-     * {@link Point}
      */
     get relativePos(): Point {
         return {
@@ -367,8 +474,6 @@ export interface Tile {
 }
 /**
  * Enum of possible Layer types
- * 
- * {@link Layer}
  */
 export const enum LayerType {
     AutoLayer = "AutoLayer",
@@ -382,6 +487,14 @@ export interface IntGridValueDef {
     /** Unique string identifier */
     id?: string
 }
+/**
+ * Layers support different kinds of data, specifically:
+ * - [IntGrid](https://ldtk.io/docs/tutorials/intgrid-layers/)
+ * - [Tile](https://ldtk.io/docs/tutorials/tile-layers/)
+ * - [Entity](https://ldtk.io/docs/general/editor-components/entities/)
+ * 
+ * Visit https://ldtk.io/docs/general/editor-components/layers/ for more information about layers.
+ */
 export class Layer {
     private autoLayerTiles_: Tile[] | null = null;
     private entities_: Entity[] | null = null;
@@ -392,8 +505,6 @@ export class Layer {
      * A map of IntGrid values to IntGrid value definitions.
      * 
      * The definition contains the editor color and optional identifier.
-     * 
-     * {@link IntGridValueDef}
      * 
      * This is only populated if {@link Layer.type} is `IntGrid`.
      */
@@ -448,9 +559,7 @@ export class Layer {
     }
 
     /** 
-     * Grid-based width/height. 
-     * 
-     * {@link Size}
+     * Grid-based width/height.
      */
     get size(): Size {
         return {
@@ -474,9 +583,7 @@ export class Layer {
     }
 
     /** 
-     * Total layer pixel offset, including both instance and definition offsets. 
-     * 
-     * {@link Point}
+     * Total layer pixel offset, including both instance and definition offsets.
      */
     get pxTotalOffset(): Point {
         return {
@@ -487,8 +594,6 @@ export class Layer {
 
     /** 
      * Layer type, possible values: `AutoLayer`, `Entities`, `Tiles`, `IntGrid`
-     * 
-     * {@link LayerType}
      */
     get type(): LayerType {
         return this.data.__type as LayerType;
@@ -498,8 +603,6 @@ export class Layer {
      * Non-null if `this.type === "AutoLayer"` 
      * 
      * {@link Layer.type}
-     * 
-     * {@link Tile}
      */
     get autoLayerTiles(): readonly Tile[] | null {
         return this.autoLayerTiles_;
@@ -509,8 +612,6 @@ export class Layer {
      * Non-null if `this.type === "Entities"` 
      * 
      * {@link Layer.type}
-     * 
-     * {@link Entity}
      */
     get entities(): readonly Entity[] | null {
         return this.entities_;
@@ -520,8 +621,6 @@ export class Layer {
      * Non-null if `this.type === "Tiles"` 
      * 
      * {@link Layer.type}
-     * 
-     * {@link Tile}
      */
     get gridTiles(): readonly Tile[] | null {
         return this.gridTiles_;
@@ -550,17 +649,13 @@ export class Layer {
 
     /** 
      * Parent Level
-     * 
-     * {@link Level}
      */
     get level(): Level | undefined {
         return this.world.findLevelByUid(this.data.levelId);
     }
 
     /** 
-     * Optional tileset used to render the layer 
-     * 
-     * {@link Tileset}
+     * Optional tileset used to render the layer
      */
     get tileset(): Tileset | undefined {
         if (this.data.__tilesetDefUid == null) return;
@@ -573,6 +668,9 @@ export class Layer {
     }
 }
 
+/**
+ * Level background data
+ */
 export class Background {
     constructor(private data: LDtk.Level) { }
 
@@ -597,8 +695,6 @@ export class Background {
 
     /**
      * Background pivot point, values are in the range (0, 1)
-     * 
-     * {@link Point}
      */
     get pivot(): Point {
         return {
@@ -617,17 +713,20 @@ export class Background {
 /**
  * Contains the neighbour's direction relative to this level
  * and a reference to the neighbour.
- * 
- * {@link Level}
  */
 export interface Neighbour {
     dir: "n" | "s" | "w" | "e"
     level: Level
 }
+/**
+ * A level is made up of one or more {@link Layer} instances.
+ * 
+ * Each layer holds either bitmap image tiles, entities, or
+ * integer values in a grid.
+ * 
+ * Visit https://ldtk.io/docs/general/world/ for more information.
+ */
 export class Level {
-    /**
-     * {@link Background}
-     */
     readonly background: Background;
 
     /** 
@@ -637,7 +736,7 @@ export class Level {
      */
     readonly layers: ReadonlyArray<Layer> = [];
 
-    private neighbours_: Neighbour[] | null = [];
+    private neighbours_: Neighbour[] | null = null;
 
     constructor(
         public readonly world: World,
@@ -670,9 +769,7 @@ export class Level {
     }
 
     /**
-     * World X/Y coordinates in pixels 
-     * 
-     * {@link Point}
+     * World X/Y coordinates in pixels
      */
     get pos(): Point {
         return {
@@ -684,20 +781,16 @@ export class Level {
     /**
      * Get neighbouring levels
      * 
-     * This property is lazily loaded.
-     * 
-     * {@link Neighbour}
+     * This property is lazily loaded. The first time you access this,
+     * it fetches all neighbours and caches them.
      */
     get neighbours(): Neighbour[] {
-        // lazily load neighbours
-        // reason: attempting to find neighbours before
-        // all neighbours have been found may result in
-        // returning undefined based on loading order
         if (this.neighbours_ == null) {
+            // load neighbours
             this.neighbours_ = [];
             for (let i = 0; i < this.data.__neighbours.length; ++i) {
                 const ref = this.world.findLevelByUid(this.data.__neighbours[i].levelUid);
-                if (!ref) // sanity check, should never happen
+                if (ref == null) // sanity check, should never happen
                     throw new Error(`Neighbour '${this.data.__neighbours[i].levelUid}' for level '${this.data.identifier}' does not exist.`);
                 (this.neighbours as Neighbour[])[i] = {
                     dir: this.data.__neighbours[i].dir,
@@ -722,11 +815,18 @@ export interface EnumValue {
      */
     tileSrcRect: { x: number, y: number, width: number, height: number }
 }
+/**
+ * Enums are special value types for Entities. ({@link Entity})
+ * 
+ * They could be for example the list of possible Enemy types, or a list of Item identifiers.
+ * 
+ * Each Enum is made up of one or more values. ({@link EnumValue})
+ * 
+ * Visit https://ldtk.io/docs/general/editor-components/enumerations-enums/ for more information.
+ */
 export class Enum {
     /**
      * A map of Enum value ids to Enum values.
-     * 
-     * {@link EnumValue}
      */
     readonly valueMap: Readonly<Record<string, EnumValue>>;
     /**
@@ -735,10 +835,12 @@ export class Enum {
     readonly valueIds: string[];
     /**
      * Array of this Enum's values
-     * 
-     * {@link EnumValue}
      */
     readonly values: EnumValue[];
+    /** 
+     * Optional icon tileset
+     */
+    readonly tileset: Tileset | null = null;
 
     constructor(
         public readonly world: World,
@@ -759,6 +861,9 @@ export class Enum {
         }
         this.valueIds = Object.keys(this.valueMap);
         this.values = Object.values(this.valueMap);
+        if (this.data.iconTilesetUid != null) {
+            this.tileset = world.findTilesetByUid(this.data.iconTilesetUid) ?? null
+        }
     }
 
     /** Unique string identifier */
@@ -769,17 +874,14 @@ export class Enum {
     get uid(): number {
         return this.data.uid;
     }
-    /** 
-     * Optional icon tileset 
-     * 
-     * {@link Tileset}
-     */
-    get tileset(): Tileset | undefined {
-        if (this.data.iconTilesetUid == null) return;
-        return this.world.tilesetMap[this.data.iconTilesetUid];
-    }
 }
-
+/**
+ * Tilesets are bitmap images which are used to render Tile layers.
+ * 
+ * See {@link Layer} for more information.
+ * 
+ * Visit https://ldtk.io/docs/tutorials/tile-layers/ for more information about tileset usage.
+ */
 export class Tileset {
     constructor(
         public readonly world: World,
@@ -823,11 +925,25 @@ export class Tileset {
     }
 }
 
+/**
+ * Worlds contains various definitions ({@link Enum}, {@link Tileset}) and
+ * are made up of one or more {@link Level}s, which utilise these definitions.
+ * 
+ * Worlds can have different layouts: `Linear`, `Free`, or `GridVania`.
+ * 
+ * Linear worlds are organized as a linear sequence of levels, either
+ * horizontal or vertical.
+ * 
+ * Free worlds are not organized, all levels appear freely in 2D space.
+ * 
+ * GridVania worlds are organized into a uniform 2D grid, where each level 
+ * can take up one or more grid cells.
+ * 
+ * Visit https://ldtk.io/docs/general/world/ for more information.
+ */
 export class World {
     /**
      * A map of Level ids to Levels.
-     * 
-     * {@link Level}
      */
     readonly levelMap: Readonly<Record<string, Level>>;
     /**
@@ -836,15 +952,11 @@ export class World {
     readonly levelIds: string[];
     /**
      * Array Levels defined for this World.
-     * 
-     * {@link Level}
      */
     readonly levels: Level[];
 
     /**
      * A map of Tileset ids to Tilesets.
-     * 
-     * {@link Tileset}
      */
     readonly tilesetMap: Readonly<Record<number, Tileset>>;
     /**
@@ -853,15 +965,11 @@ export class World {
     readonly tilesetIds: string[];
     /**
      * Array Tilesets defined for this World.
-     * 
-     * {@link Tileset}
      */
     readonly tilesets: Tileset[];
 
     /**
      * A map of Enum ids to Enums.
-     * 
-     * {@link Enum}
      */
     readonly enumMap: Readonly<Record<string, Enum>>;
     /**
@@ -870,8 +978,6 @@ export class World {
     readonly enumIds: string[];
     /**
      * Array Enums defined for this World.
-     * 
-     * See {@link Enum}
      */
     readonly enums: Enum[];
 
@@ -914,8 +1020,6 @@ export class World {
 
     /**
      * Find a level for which a given `predicate` is true.
-     * 
-     * {@link Level}
      */
     findLevel(predicate: (l: Level) => boolean): Level | undefined {
         for (let i = 0; i < this.levels.length; ++i) {
@@ -924,8 +1028,6 @@ export class World {
     }
     /**
      * Find a tileset for which a given `predicate` is true.
-     * 
-     * {@link Tileset}
      */
     findTileset(predicate: (t: Tileset) => boolean): Tileset | undefined {
         for (let i = 0; i < this.tilesets.length; ++i) {
@@ -934,8 +1036,6 @@ export class World {
     }
     /**
      * Find an enum for which a given `predicate` is true.
-     * 
-     * {@link Enum}
      */
     findEnum(predicate: (e: Enum) => boolean): Enum | undefined {
         for (let i = 0; i < this.enums.length; ++i) {
@@ -945,32 +1045,24 @@ export class World {
 
     /**
      * Find a level by its `uid`.
-     * 
-     * {@link Level}
      */
     findLevelByUid(uid: number): Level | undefined {
         return this.findLevel(l => l.uid === uid);
     }
     /**
      * Find a tileset by its `uid`.
-     * 
-     * {@link Tileset}
      */
     findTilesetByUid(uid: number): Tileset | undefined {
         return this.findTileset(t => t.uid === uid);
     }
     /**
      * Find a tileset by its `path`.
-     * 
-     * {@link Tileset}
      */
     findTilesetByPath(path: string): Tileset | undefined {
         return this.findTileset(t => t.path === path);
     }
     /**
      * Find an enum by its `uid`.
-     * 
-     * {@link Enum}
      */
     findEnumByUid(uid: number): Enum | undefined {
         return this.findEnum(e => e.uid === uid);
@@ -994,8 +1086,6 @@ export class World {
      * The world layout
      * 
      * Possible values: "Free", "GridVania", "LinearHorizontal", "LinearVertical" 
-     * 
-     * {@link LDtk.WorldLayout}
      */
     get layout() {
         return this.data.worldLayout;
@@ -1022,6 +1112,7 @@ export class World {
             const rel = level.externalRelPath
             if (rel != null) {
                 promises.push(this.fetchLevel(rel).then(loaded => {
+                    // NOTE(safety): this may be incorrect
                     (this.levelMap as Record<string, Level>)[loaded.id] = loaded;
                     (this.levelIds as string[])[i] = loaded.id;
                     (this.levels as Level[])[i] = loaded;
@@ -1045,18 +1136,21 @@ export class World {
         if (this.levelMap[identifier] != null) {
             return;
         }
-        // grab the index so that we can maintain the level order
         let levelIndex = -1;
         let level = null;
+        // find the raw level data
         for (let i = 0; i < this.data.levels.length; ++i) {
             if (this.data.levels[i].identifier === identifier) {
                 level = this.data.levels[i];
+                // grab the index so that we can maintain the level order
                 levelIndex = i;
                 break;
             }
         }
         if (level == null) throw new Error(`Level ${identifier} does not exist!`);
+        // fetch and insert it into the level storage
         const loaded = await this.fetchLevel(level.externalRelPath!);
+        // NOTE(safety): this may be incorrect
         (this.levelMap as Record<string, Level>)[loaded.id] = loaded;
         (this.levelIds as string[])[levelIndex] = loaded.id;
         (this.levels as Level[])[levelIndex] = loaded;
@@ -1077,6 +1171,9 @@ export class World {
         return new World(await loadJSON(path));
     }
 
+    /**
+     * Used for fetching external levels
+     */
     private async fetchLevel(path: string): Promise<Level> {
         return new Level(this, await loadJSON(path));
     }
@@ -1086,10 +1183,10 @@ export class World {
      * 
      * This does the following in Node:
      * ```
-     * const PATH = "assets/world.ldtk";
+     * const path = ... ;
      * import * as fs from "fs";
      * const world = await new Promise((resolve, reject) => {
-     *     fs.readFile(PATH, { encoding: "utf-8" }, (err, data) => {
+     *     fs.readFile(path, { encoding: "utf-8" }, (err, data) => {
      *          if (err) reject(err);
      *          else resolve(JSON.parse(data) as LDtk.World);
      *     });
@@ -1097,8 +1194,8 @@ export class World {
      * ```
      * And in the browser:
      * ```
-     * const PATH = "assets/world.ldtk";
-     * const world = await (await fetch(PATH)).json() as LDtk.World;
+     * const path = ... ;
+     * const world = await (await fetch(path)).json() as LDtk.World;
      * ```
      */
     static async loadRaw(path: string): Promise<LDtk.World> {

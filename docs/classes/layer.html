@@ -65,6 +65,19 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Layers support different kinds of data, specifically:</p>
+						<ul>
+							<li><a href="https://ldtk.io/docs/tutorials/intgrid-layers/">IntGrid</a></li>
+							<li><a href="https://ldtk.io/docs/tutorials/tile-layers/">Tile</a></li>
+							<li><a href="https://ldtk.io/docs/general/editor-components/entities/">Entity</a></li>
+						</ul>
+					</div>
+					<p>Visit <a href="https://ldtk.io/docs/general/editor-components/layers/">https://ldtk.io/docs/general/editor-components/layers/</a> for more information about layers.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -126,7 +139,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L400">index.ts:400</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L511">index.ts:511</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -151,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">auto<wbr>Layer<wbr>Tiles_<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/tile.html" class="tsd-signature-type" data-tsd-kind="Interface">Tile</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L386">index.ts:386</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L499">index.ts:499</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -161,7 +174,7 @@
 					<div class="tsd-signature tsd-kind-icon">entities_<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L387">index.ts:387</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L500">index.ts:500</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -171,7 +184,7 @@
 					<div class="tsd-signature tsd-kind-icon">grid<wbr>Tiles_<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/tile.html" class="tsd-signature-type" data-tsd-kind="Interface">Tile</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L388">index.ts:388</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L501">index.ts:501</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -181,7 +194,7 @@
 					<div class="tsd-signature tsd-kind-icon">int<wbr>Grid<wbr>Values<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/intgridvaluedef.html" class="tsd-signature-type" data-tsd-kind="Interface">IntGridValueDef</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L400">index.ts:400</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L511">index.ts:511</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -189,7 +202,6 @@
 							<p>A map of IntGrid values to IntGrid value definitions.</p>
 						</div>
 						<p>The definition contains the editor color and optional identifier.</p>
-						<p><a href="../interfaces/intgridvaluedef.html">IntGridValueDef</a></p>
 						<p>This is only populated if <a href="layer.html#type">Layer.type</a> is <code>IntGrid</code>.</p>
 					</div>
 				</section>
@@ -199,7 +211,7 @@
 					<div class="tsd-signature tsd-kind-icon">int<wbr>Grid_<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L389">index.ts:389</a></li>
+							<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L502">index.ts:502</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -223,7 +235,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L504">index.ts:504</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L607">index.ts:607</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -231,7 +243,6 @@
 									<p>Non-null if <code>this.type === &quot;AutoLayer&quot;</code></p>
 								</div>
 								<p><a href="layer.html#type">Layer.type</a></p>
-								<p><a href="../interfaces/tile.html">Tile</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">readonly </span><a href="../interfaces/tile.html" class="tsd-signature-type" data-tsd-kind="Interface">Tile</a><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
@@ -247,7 +258,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L515">index.ts:515</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L616">index.ts:616</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -255,7 +266,6 @@
 									<p>Non-null if <code>this.type === &quot;Entities&quot;</code></p>
 								</div>
 								<p><a href="layer.html#type">Layer.type</a></p>
-								<p><a href="entity.html">Entity</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">readonly </span><a href="entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
@@ -271,7 +281,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L467">index.ts:467</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L576">index.ts:576</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -294,7 +304,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L526">index.ts:526</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L625">index.ts:625</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -302,7 +312,6 @@
 									<p>Non-null if <code>this.type === &quot;Tiles&quot;</code></p>
 								</div>
 								<p><a href="layer.html#type">Layer.type</a></p>
-								<p><a href="../interfaces/tile.html">Tile</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">readonly </span><a href="../interfaces/tile.html" class="tsd-signature-type" data-tsd-kind="Interface">Tile</a><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
@@ -318,7 +327,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L547">index.ts:547</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L646">index.ts:646</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -350,14 +359,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L556">index.ts:556</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L653">index.ts:653</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Parent Level</p>
 								</div>
-								<p><a href="level.html">Level</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="level.html" class="tsd-signature-type" data-tsd-kind="Class">Level</a></h4>
 						</li>
@@ -373,7 +381,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L472">index.ts:472</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L581">index.ts:581</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -395,14 +403,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L481">index.ts:481</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L588">index.ts:588</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Total layer pixel offset, including both instance and definition offsets.</p>
 								</div>
-								<p><a href="../interfaces/point.html">Point</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/point.html" class="tsd-signature-type" data-tsd-kind="Interface">Point</a></h4>
 						</li>
@@ -418,14 +425,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L455">index.ts:455</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L564">index.ts:564</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Grid-based width/height.</p>
 								</div>
-								<p><a href="../interfaces/size.html">Size</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/size.html" class="tsd-signature-type" data-tsd-kind="Interface">Size</a></h4>
 						</li>
@@ -441,14 +447,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L565">index.ts:565</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L660">index.ts:660</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Optional tileset used to render the layer</p>
 								</div>
-								<p><a href="tileset.html">Tileset</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="tileset.html" class="tsd-signature-type" data-tsd-kind="Class">Tileset</a></h4>
 						</li>
@@ -464,14 +469,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L493">index.ts:493</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L598">index.ts:598</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Layer type, possible values: <code>AutoLayer</code>, <code>Entities</code>, <code>Tiles</code>, <code>IntGrid</code></p>
 								</div>
-								<p><a href="../enums/layertype.html">LayerType</a></p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../enums/layertype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">LayerType</a></h4>
 						</li>
@@ -487,7 +491,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/3e1df14/src/index.ts#L571">index.ts:571</a></li>
+									<li>Defined in <a href="https://github.com/jprochazk/ldtk-ts/blob/938877b/src/index.ts#L666">index.ts:666</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
