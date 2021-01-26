@@ -4,13 +4,13 @@
     "description": "Importer for the LDtk project file format",
     "author": "Jan Procházka",
     "license": "MIT",
-    "homepage": "https://github.com/jprochazk/ldtk",
+    "homepage": "https://github.com/jprochazk/ldtk-ts",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/jprochazk/ldtk.git"
+        "url": "git+https://github.com/jprochazk/ldtk-ts.git"
     },
     "bugs": {
-        "url": "https://github.com/jprochazk/ldtk/issues"
+        "url": "https://github.com/jprochazk/ldtk-ts/issues"
     },
     "keywords": [
         "ldtk",
