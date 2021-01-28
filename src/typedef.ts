@@ -31,7 +31,7 @@ export interface World {
     /** If TRUE, all layers in all levels will also be exported as PNG along with the project file (default is FALSE) */
     exportPng: boolean
     /** File naming pattern for exported PNGs */
-    pngFilePattern?: string
+    pngFilePattern: string | null
     /** If TRUE, a Tiled compatible file will also be generated along with the LDtk JSON file (default is FALSE) */
     exportTiled: boolean
     /** If TRUE, one file will be saved the project (incl. all its definitions) and one file per-level in a sub-folder. */
@@ -87,7 +87,7 @@ export interface EntityDefinition {
     /** Unique string identifier */
     identifier: string
     /** Possible values: "DiscardOldOnes", "PreventAdding", "MoveLastOne" */
-    limitBehavior?: LimitBehavior
+    limitBehavior: LimitBehavior | null
     /** Max instances per level */
     maxPerLevel: number
     /** Pivot X coordinate (from 0 to 1.0) */
@@ -95,15 +95,15 @@ export interface EntityDefinition {
     /** Pivot Y coordinate (from 0 to 1.0) */
     pivotY: number
     /** Possible values: "Rectangle", "Ellipse", "Tile", "Cross" */
-    renderMode?: RenderMode
+    renderMode: RenderMode | null
     /** Display entity name in editor */
     showName: boolean
     /** Tile ID used for optional tile display */
-    tileId?: number
+    tileId: number | null
     /** Possible values: "Stretch", "Crop" */
-    tileRenderMode?: TileRenderMode
+    tileRenderMode: TileRenderMode | null
     /** Tileset ID used for optional tile display */
-    tilesetId?: number
+    tilesetId: number | null
     /** Unique Int identifier */
     uid: number
     /** Pixel width */
@@ -126,46 +126,46 @@ export interface FieldDefinition {
      * Includes the dot: ".ext" */
     acceptFileTypes?: Array<string>
     /** Array max length */
-    arrayMaxLength?: number
+    arrayMaxLength: number | null
     /** Array min length */
-    arrayMinLength?: number
+    arrayMinLength: number | null
     /** 
      * TRUE if the value can be null. 
      * 
      * For arrays, TRUE means it can contain null values (exception: array of Points can't have null values). */
     canBeNull: boolean
     /** Default value if selected value is null or invalid. */
-    defaultOverride?: unknown
+    defaultOverride: unknown
     editorAlwaysShow: boolean
     /** Possible values: "Hidden", "ValueOnly", "NameAndValue", "EntityTile", "PointStar", "PointPath", "RadiusPx", "RadiusGrid" */
-    editorDisplayMode?: EditorDisplayMode
+    editorDisplayMode: EditorDisplayMode | null
     /** Possible values: "Above", "Center", "Beneath" */
-    editorDisplayPos?: EditorDisplayPos
+    editorDisplayPos: EditorDisplayPos | null
     /** Unique string identifier */
     identifier: string
     /** TRUE if the value is an array of multiple values */
     isArray: boolean
     /** Max limit for value, if applicable */
-    max?: number
+    max: number | null
     /** Min limit for value, if applicable */
-    min?: number
+    min: number | null
     /** 
      * Optional regular expression that needs to be matched to accept values. 
      * 
      * Expected format: "/someRegEx/g", with optional "i" flag. 
      */
-    regex?: string
+    regex: string | null
     /** Internal type enum */
-    purpleType?: unknown
+    purpleType: unknown | null
     /** Unique Intidentifier */
     uid: number
 }
 export interface EnumDefinition {
-    externalFileChecksum?: string
+    externalFileChecksum: string | null
     /** Relative path to the external file providing this Enum */
-    externalRelPath?: string
+    externalRelPath: string | null
     /** Tileset UID if provided */
-    iconTilesetUid?: number
+    iconTilesetUid: number | null
     /** Unique string identifier */
     identifier: string
     /** Unique Int identifier */
@@ -179,14 +179,14 @@ export interface EnumValueDefinition {
     /** Enum value */
     id: string
     /** The optional ID of the tile */
-    tileId?: number
+    tileId: number | null
 }
 export interface LayerDefinition {
     /** Type of the layer (*IntGrid, Entities, Tiles, AutoLayer*) */
     __type: string
-    autoSourceLayerDefUid?: number
+    autoSourceLayerDefUid: number | null
     /** Reference to the Tileset UID being used by this auto-layer rules */
-    autoTilesetDefUid?: number
+    autoTilesetDefUid: number | null
     /** Opacity of the layer (0 to 1.0) */
     displayOpacity: number
     /** Width and height of the grid in pixels */
@@ -204,9 +204,9 @@ export interface LayerDefinition {
     /** If the tiles are smaller or larger than the layer grid, the pivot value will be used to position the tile relatively its grid cell. */
     tilePivotY: number
     /** Reference to the Tileset UID being used by this Tile layer */
-    tilesetDefUid?: number
+    tilesetDefUid: number | null
     /** Type of the layer as an Enum Possible values: "IntGrid", "Entities", "Tiles", "AutoLayer" */
-    purpleType?: Type
+    purpleType: Type | null
     /** Unique Int identifier */
     uid: number
 }
@@ -214,7 +214,7 @@ export interface LayerDefinition {
 export interface IntGridValueDefinition {
     color: string
     /** Unique string identifier */
-    identifier?: string
+    identifier: string | null
 }
 /** 
  * The "Tileset" definition is the most important part among project definitions. 
@@ -266,11 +266,11 @@ export interface Level {
     /** Background color of the level (same as "bgColor", except the default value is automatically used here if its value is "null") */
     __bgColor: string
     /** Position informations of the background image, if there is one. */
-    __bgPos?: LevelBackgroundPosition
+    __bgPos: LevelBackgroundPosition | null
     /** An array listing all other levels touching this one on the world map. In "linear" world layouts, this array is populated with previous/next levels in array, and "dir" depends on the linear horizontal/vertical layout. */
     __neighbours: Array<NeighbourLevel>
     /** Background color of the level. If "null", the project "defaultLevelBgColor" should be used. */
-    bgColor?: string
+    bgColor: string | null
     /** Background image X pivot (0-1) */
     bgPivotX: number
     /** Background image Y pivot (0-1) */
@@ -282,15 +282,15 @@ export interface Level {
      * 
      * Possible values: "Unscaled", "Contain", "Cover", "CoverDirty" 
      */
-    bgPos?: BgPos
+    bgPos: BgPos | null
     /** The *optional* relative path to the level background image. */
-    bgRelPath?: string
+    bgRelPath: string | null
     /** 
      * This value is not null if the project option "*Save levels separately*" is enabled. 
      * 
      * In this case, this **relative** path points to the level Json file. 
      */
-    externalRelPath?: string
+    externalRelPath: string | null
     /** Unique string identifier */
     identifier: string
     /** 
@@ -354,9 +354,9 @@ export interface LayerInstance {
     /** Total layer Y pixel offset, including both instance and definition offsets. */
     __pxTotalOffsetY: number
     /** The definition UID of corresponding Tileset, if any. */
-    __tilesetDefUid?: number
+    __tilesetDefUid: number | null
     /** The relative path to corresponding Tileset, if any. */
-    __tilesetRelPath?: string
+    __tilesetRelPath: string | null
     /** Layer type (possible values: IntGrid, Entities, Tiles or AutoLayer) */
     __type: string
     /** 
@@ -434,7 +434,7 @@ export interface EntityInstance {
      * Optional Tile used to display this entity (it could either be the default Entity tile, 
      * or some tile provided by a field value, like an Enum).
      */
-    __tile?: EntityInstanceTile
+    __tile: EntityInstanceTile | null
     /** Reference of the **Entity definition** UID */
     defUid: number
     fieldInstances: Array<FieldInstance>
@@ -457,7 +457,7 @@ export interface FieldInstance {
      * 
      * It can also be an "Array" of those same types.
      */
-    __value?: unknown
+    __value: unknown
     /** Reference of the **Field definition** UID */
     defUid: number
     /** Editor internal raw values */

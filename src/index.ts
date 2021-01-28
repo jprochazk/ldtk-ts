@@ -1,6 +1,9 @@
 import { loadJSON } from "./util";
 import * as LDtk from "./typedef";
 
+// TODO: instead of return new objects for things like Point and Size, instantiate them in the constructor
+// TODO: const enum -> enum
+
 // Re-export LDtk type definitions
 export {
     LDtk
@@ -22,8 +25,6 @@ export interface Size {
     height: number
 }
 
-// TODO: instead of return new objects for things like Point and Size, instantiate them in the constructor
-// TODO: auto-generate documentation https://den.dev/blog/docs-github-actions/#typescript-documentation-generator
 
 export const enum FieldType {
     /**
@@ -485,7 +486,7 @@ export interface IntGridValueDef {
     /** Color (RGB hex string) */
     color: string
     /** Unique string identifier */
-    id?: string
+    id: string | null
 }
 /**
  * Layers support different kinds of data, specifically:
@@ -500,6 +501,7 @@ export class Layer {
     private entities_: Entity[] | null = null;
     private gridTiles_: Tile[] | null = null;
     private intGrid_: number[][] | null = null;
+    private tileset_?: Tileset;
 
     /**
      * A map of IntGrid values to IntGrid value definitions.
@@ -514,6 +516,8 @@ export class Layer {
         public readonly world: World,
         private data: LDtk.LayerInstance
     ) {
+        if (this.data.__tilesetDefUid != null)
+            this.tileset_ = this.world.findTilesetByUid(this.data.__tilesetDefUid);
         switch (this.type) {
             case LayerType.AutoLayer: {
                 this.autoLayerTiles_ = data.autoLayerTiles;
@@ -658,8 +662,7 @@ export class Layer {
      * Optional tileset used to render the layer
      */
     get tileset(): Tileset | undefined {
-        if (this.data.__tilesetDefUid == null) return;
-        return this.world.tilesetMap[this.data.__tilesetDefUid];
+        return this.tileset_;
     }
 
     /** Unique Int identifier */
@@ -958,7 +961,7 @@ export class World {
     /**
      * A map of Tileset ids to Tilesets.
      */
-    readonly tilesetMap: Readonly<Record<number, Tileset>>;
+    readonly tilesetMap: Readonly<Record<string, Tileset>>;
     /**
      * Array Tilesets Ids defined for this World.
      */

@@ -142,7 +142,8 @@ describe("importer", () => {
                     expect(p_layer.uid).toEqual(o_layer.layerDefUid);
                     expect(p_layer.size.width).toEqual(o_layer.__cWid);
                     expect(p_layer.size.height).toEqual(o_layer.__cHei);
-                    expect(o_layer.__type).toEqual(p_layer.type);
+                    expect(p_layer.type).toEqual(o_layer.__type);
+                    expect(p_layer.tileset?.uid ?? null).toEqual(o_layer.__tilesetDefUid);
                     if (o_layer.__type === "AutoLayer") {
                         // auto layer tiles aren't preprocessed
                         expect(p_layer.autoLayerTiles).not.toBeNull();
