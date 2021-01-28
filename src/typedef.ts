@@ -27,9 +27,11 @@ export interface World {
     /** Default Y pivot (0 to 1) for new entities */
     defaultPivotY: number
     /** A interfaceure containing all the definitions of this project */
-    defs?: Definitions
+    defs: Definitions
     /** If TRUE, all layers in all levels will also be exported as PNG along with the project file (default is FALSE) */
     exportPng: boolean
+    /** File naming pattern for exported PNGs */
+    pngFilePattern?: string
     /** If TRUE, a Tiled compatible file will also be generated along with the LDtk JSON file (default is FALSE) */
     exportTiled: boolean
     /** If TRUE, one file will be saved the project (incl. all its definitions) and one file per-level in a sub-folder. */

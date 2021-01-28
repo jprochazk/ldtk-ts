@@ -1,6 +1,6 @@
 # ldtk-ts
 
-LDtk 0.7.0 file format type definitions and import wrapper.
+[LDtk](https://ldtk.io/) file format type definitions and import wrapper.
 
 This library provides an API without all the noise of LDtk "editor-only" values, 
 definitions, etc., combined with many utilities to make usage easier.
@@ -45,3 +45,11 @@ World.fromURL("assets/world.ldtk").then(async world => {
     window.requestAnimationFrame(loop)
 });
 ```
+
+### Versioning table
+
+LDtk | ldtk-ts 
+:-----:|:-------:
+0.7.2 | 0.8.6
+0.7.1 | 0.8.5
+<0.7.0 | not supported

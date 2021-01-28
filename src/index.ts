@@ -363,7 +363,7 @@ export class Entity {
 
         // @ts-ignore accessing private property
         const worldData = world.data;
-        const entities = worldData.defs?.entities;
+        const entities = worldData.defs.entities;
         if (entities != null) {
             for (let i = 0; i < entities.length; ++i) {
                 if (entities[i].uid === this.data.defUid) {
@@ -541,7 +541,7 @@ export class Layer {
                 }
                 //@ts-ignore accessing private property
                 const worldData = world.data;
-                const layers = worldData.defs!.layers;
+                const layers = worldData.defs.layers;
                 if (layers != null) {
                     for (let i = 0; i < layers.length; ++i) {
                         if (layers[i].uid === this.uid) {
@@ -988,22 +988,20 @@ export class World {
         this.enumMap = {};
         this.enumIds = [];
         this.enums = [];
-        if (data.defs != null) {
-            // load tilesets
-            for (let i = 0; i < data.defs.tilesets.length; ++i) {
-                const t = data.defs.tilesets[i];
-                (this.tilesetMap as Record<string, Tileset>)[t.identifier] = new Tileset(this, t);
-            }
-            this.tilesetIds = Object.keys(this.tilesetMap);
-            this.tilesets = Object.values(this.tilesetMap);
-            // load enums
-            for (let i = 0; i < data.defs.enums.length; ++i) {
-                const e = data.defs.enums[i];
-                (this.enumMap as Record<string, Enum>)[e.identifier] = new Enum(this, e);
-            }
-            this.enumIds = Object.keys(this.enumMap);
-            this.enums = Object.values(this.enumMap);
+        // load tilesets
+        for (let i = 0; i < data.defs.tilesets.length; ++i) {
+            const t = data.defs.tilesets[i];
+            (this.tilesetMap as Record<string, Tileset>)[t.identifier] = new Tileset(this, t);
         }
+        this.tilesetIds = Object.keys(this.tilesetMap);
+        this.tilesets = Object.values(this.tilesetMap);
+        // load enums
+        for (let i = 0; i < data.defs.enums.length; ++i) {
+            const e = data.defs.enums[i];
+            (this.enumMap as Record<string, Enum>)[e.identifier] = new Enum(this, e);
+        }
+        this.enumIds = Object.keys(this.enumMap);
+        this.enums = Object.values(this.enumMap);
 
         this.levelMap = {};
         this.levelIds = [];
